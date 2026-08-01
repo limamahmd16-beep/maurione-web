@@ -1,4 +1,19 @@
 import React, { useState, useEffect, useMemo, useRef, createContext, useContext } from "react";
+import { db } from "./firebase.js";
+import { collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, updateDoc, increment, serverTimestamp } from "firebase/firestore";
+
+// ===== Cloudinary: رفع الصور للسحابة =====
+const CLOUDINARY_CLOUD = "bjlglhaw";
+const CLOUDINARY_PRESET = "maurione";
+async function uploadToCloudinary(file) {
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append("upload_preset", CLOUDINARY_PRESET);
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method: "POST", body: fd });
+  const data = await res.json();
+  if (!data.secure_url) throw new Error("upload failed");
+  return data.secure_url;
+}
 import {
   Search, Heart, MessageCircle, User, Plus, Home as HomeIcon,
   Phone, ChevronRight, ChevronLeft, MapPin, Clock, Camera, Check,
@@ -1556,6 +1571,7 @@ function AddAdScreen({ onPublish, onExit }) {
   const { t, lang, setLang, dir } = useT();
   const [step, setStep] = useState(0);
   const fileInputRef = useRef(null);
+  const [uploading, setUploading] = useState(0);
   const [form, setForm] = useState({ cat: "cars", adType: "type_sale", title: "", price: "", condition: "cond_new", desc: "", city: "", area: "", phone: "", whatsapp: true, images: [], specs: {} });
   const [done, setDone] = useState(false);
   const update = (k, v) => setForm((f) => ({ ...f, [k]: v }));
@@ -1688,18 +1704,22 @@ function AddAdScreen({ onPublish, onExit }) {
               accept="image/*"
               multiple
               style={{ display: "none" }}
-              onChange={(e) => {
+              onChange={async (e) => {
                 const files = Array.from(e.target.files || []);
                 const room = 8 - form.images.length;
                 const picked = files.slice(0, Math.max(room, 0));
-                picked.forEach((file) => {
-                  const reader = new FileReader();
-                  reader.onload = (ev) => {
-                    setForm((f) => (f.images.length >= 8 ? f : { ...f, images: [...f.images, ev.target.result] }));
-                  };
-                  reader.readAsDataURL(file);
-                });
-                e.target.value = ""; // allow re-picking the same file
+                e.target.value = "";
+                for (const file of picked) {
+                  setUploading((n) => n + 1);
+                  try {
+                    const url = await uploadToCloudinary(file);   // رفع حقيقي للسحابة
+                    setForm((f) => (f.images.length >= 8 ? f : { ...f, images: [...f.images, url] }));
+                  } catch (err) {
+                    toast("تعذّر رفع الصورة");
+                  } finally {
+                    setUploading((n) => Math.max(0, n - 1));
+                  }
+                }
               }}
             />
             <div className="grid grid-cols-3 gap-3">
@@ -1718,7 +1738,13 @@ function AddAdScreen({ onPublish, onExit }) {
                   </button>
                 </div>
               ))}
-              {form.images.length < 8 && (
+              {uploading > 0 && (
+                <div className="aspect-square rounded-xl flex flex-col items-center justify-center gap-1" style={{ border: `1px dashed ${C.green}`, background: hexToRgba(C.green, 0.06) }}>
+                  <div className="w-5 h-5 rounded-full border-2 animate-spin" style={{ borderColor: C.green, borderTopColor: "transparent" }} />
+                  <span className="text-[10px]" style={{ color: C.green }}>جارٍ الرفع...</span>
+                </div>
+              )}
+              {form.images.length + uploading < 8 && (
                 <button onClick={() => fileInputRef.current && fileInputRef.current.click()} className="aspect-square rounded-xl flex flex-col items-center justify-center gap-1" style={{ border: `1px dashed ${C.border}` }}>
                   <Camera size={18} color={C.gray} />
                   <span className="text-[10px]" style={{ color: C.gray }}>{t("add_photo")}</span>
@@ -2455,10 +2481,7 @@ function MauriOneInner() {
   const { lang, dir, t } = useT();
   const [phase, setPhase] = useState("splash"); // splash -> onboarding -> login/signup/otp -> app
   const [tab, setTab] = useState("home");
-  const [ads, setAds] = useState(() => {
-    const saved = Store.get(ADS_KEY, null);
-    return Array.isArray(saved) ? saved : [];  // start empty; samples available via "restore samples"
-  });
+  const [ads, setAds] = useState([]);           // الإعلانات من Firestore (سحابية، للجميع)
   const [favorites, setFavorites] = useState(new Set());
   const [selectedAd, setSelectedAd] = useState(null);
   const [searchCat, setSearchCat] = useState("all");
@@ -2475,8 +2498,27 @@ function MauriOneInner() {
   });
   useEffect(() => { Store.set(PROFILE_KEY, profile); }, [profile]);
 
-  // persist ads whenever they change
-  useEffect(() => { Store.set(ADS_KEY, ads); }, [ads]);
+  // معرّف الجهاز: يميّز إعلانات هذا المستخدم (بديل مؤقت عن الحسابات)
+  const deviceId = useMemo(() => {
+    let id = Store.get("maurione_device", null);
+    if (!id) { id = "u" + Math.random().toString(36).slice(2) + Date.now().toString(36); Store.set("maurione_device", id); }
+    return id;
+  }, []);
+
+  // مزامنة الإعلانات من Firestore لحظيًا (تظهر لكل المستخدمين)
+  useEffect(() => {
+    try {
+      const q = query(collection(db, "ads"), orderBy("createdAt", "desc"));
+      const unsub = onSnapshot(q, (snap) => {
+        const list = snap.docs.map((d) => {
+          const data = d.data();
+          return { ...data, id: d.id, mine: data.ownerId === deviceId };
+        });
+        setAds(list);
+      }, (err) => { console.error("Firestore:", err); });
+      return () => unsub();
+    } catch (e) { console.error(e); }
+  }, [deviceId]);
 
   const myAdsCount = ads.filter((a) => a.mine).length;
   const totalViews = ads.filter((a) => a.mine).reduce((sum, a) => sum + (a.views || 0), 0);
@@ -2484,29 +2526,43 @@ function MauriOneInner() {
   const unreadMsgs = MOCK_CHATS.reduce((sum, c) => sum + (c.unread || 0), 0);
 
   const toggleFav = (id) => setFavorites((prev) => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
-  const openAd = (ad) => {
-    const updated = { ...ad, views: (ad.views || 0) + 1 };
-    setAds((prev) => prev.map((a) => (a.id === ad.id ? updated : a)));
-    setSelectedAd(updated);
+  const openAd = async (ad) => {
+    setSelectedAd({ ...ad, views: (ad.views || 0) + 1 });
+    try { await updateDoc(doc(db, "ads", ad.id), { views: increment(1) }); } catch (e) {}
   };
   const goSearch = (catId) => { setSearchCat(catId || "all"); setTab("search"); };
-  const deleteAd = (id) => {
-    setAds((prev) => prev.filter((a) => a.id !== id));
-    setFavorites((prev) => { const n = new Set(prev); n.delete(id); return n; });
+  const deleteAd = async (id) => {
     setSelectedAd((cur) => (cur && cur.id === id ? null : cur));
-    toast(t("ad_deleted"));
+    setFavorites((prev) => { const n = new Set(prev); n.delete(id); return n; });
+    try { await deleteDoc(doc(db, "ads", id)); toast(t("ad_deleted")); } catch (e) { toast("تعذّر الحذف"); }
   };
-  const clearAllAds = () => { setAds([]); toast(t("all_ads_cleared")); };
-  const restoreSeed = () => { setAds(SEED_ADS); toast(t("sample_restored")); };
+  const clearAllAds = async () => {
+    const mine = ads.filter((a) => a.mine);
+    for (const a of mine) { try { await deleteDoc(doc(db, "ads", a.id)); } catch (e) {} }
+    toast(t("all_ads_cleared"));
+  };
+  const restoreSeed = () => { toast("العيّنات غير متاحة في النسخة السحابية"); };
 
-  const handlePublish = (form) => {
+  const handlePublish = async (form) => {
     const fieldDefs = CATEGORY_FIELDS[form.cat] || [];
     const specsArr = fieldDefs
       .filter((f) => form.specs[f.key])
       .map((f) => [fieldLabel(f.key, lang), form.specs[f.key], f.key]); // icon stored as key (serializable)
     const nowLabel = lang === "fr" ? "maintenant" : lang === "en" ? "now" : "الآن";
-    const newAd = { id: Date.now(), cat: form.cat, title: form.title, price: form.price, currency: t("currency"), city: form.city, area: form.area, time: nowLabel, views: 0, featured: true, condition: NO_CONDITION_CATS.includes(form.cat) ? t(form.adType) : t(form.condition), desc: form.desc, specs: specsArr, phone: form.phone, seller: t("guest"), rating: 0, reviews: 0, verified: false, mine: true, images: form.images };
-    setAds((prev) => [newAd, ...prev]);
+    const newAd = {
+      cat: form.cat, title: form.title, price: form.price, currency: t("currency"),
+      city: form.city, area: form.area || "", time: nowLabel, views: 0, featured: true,
+      condition: NO_CONDITION_CATS.includes(form.cat) ? t(form.adType) : t(form.condition),
+      desc: form.desc, specs: specsArr, phone: form.phone, seller: profile.name || t("guest"),
+      rating: 0, reviews: 0, verified: false, images: form.images || [],
+      ownerId: deviceId, createdAt: serverTimestamp(),
+    };
+    try {
+      await addDoc(collection(db, "ads"), newAd);
+      // لا نضيف محليًا — onSnapshot يجلبه تلقائيًا من السحابة
+    } catch (e) {
+      console.error(e); toast("تعذّر النشر، حاول مجددًا");
+    }
   };
 
   if (phase === "splash") return <div dir={dir} className="w-full flex justify-center" style={{ background: "#000", minHeight: "100vh" }}><div className="relative w-full mo-frame" style={{ minHeight: "100vh" }}><SplashScreen onDone={() => setPhase("onboarding")} /></div></div>;
