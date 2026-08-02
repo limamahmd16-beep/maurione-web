@@ -96,6 +96,8 @@ const T = {
   search_short: { ar: "ابحث عن سيارات، وظائف، عقارات...", fr: "Rechercher...", en: "Search..." },
   voice_soon: { ar: "البحث الصوتي سيتوفر قريبًا", fr: "Recherche vocale bientôt disponible", en: "Voice search coming soon" },
   saved_searches: { ar: "عمليات البحث المحفوظة", fr: "Recherches enregistrées", en: "Saved searches" },
+  search_btn: { ar: "بحث", fr: "Rechercher", en: "Search" },
+  no_recent_search: { ar: "لا توجد عمليات بحث سابقة", fr: "Aucune recherche récente", en: "No recent searches" },
   choose_category: { ar: "اختر القسم", fr: "Choisir une catégorie", en: "Choose category" },
   city: { ar: "المدينة", fr: "Ville", en: "City" },
   all_cities: { ar: "كل المدن", fr: "Toutes les villes", en: "All cities" },
@@ -190,6 +192,7 @@ const T = {
   type_rent: { ar: "للإيجار", fr: "À louer", en: "For rent" },
   type_wanted: { ar: "مطلوب", fr: "Recherché", en: "Wanted" },
   type_other: { ar: "أخرى", fr: "Autre", en: "Other" },
+  type_other_placeholder: { ar: "اكتب الخيار المطلوب...", fr: "Saisissez votre choix...", en: "Type your option..." },
 
   // ---- notifications ----
   notifications: { ar: "الإشعارات", fr: "Notifications", en: "Notifications" },
@@ -236,6 +239,16 @@ const T = {
   settings: { ar: "الإعدادات", fr: "Paramètres", en: "Settings" },
   settings_sub: { ar: "إعدادات الحساب والتطبيق", fr: "Paramètres du compte et de l'app", en: "Account & app settings" },
   help_support: { ar: "المساعدة والدعم", fr: "Aide et support", en: "Help & support" },
+  help_q1: { ar: "كيف أنشر إعلانًا؟", fr: "Comment publier une annonce ?", en: "How do I post an ad?" },
+  help_a1: { ar: "اضغط زر (+) في الأسفل، اختر القسم، عبّئ التفاصيل والصور، ثم اضغط نشر.", fr: "Appuyez sur (+), choisissez une catégorie, remplissez les détails et publiez.", en: "Tap (+) at the bottom, pick a category, fill in details and photos, then publish." },
+  help_q2: { ar: "كيف أتواصل مع البائع؟", fr: "Comment contacter le vendeur ?", en: "How do I contact a seller?" },
+  help_a2: { ar: "افتح الإعلان، ثم استخدم أزرار الاتصال أو واتساب في الأسفل.", fr: "Ouvrez l'annonce et utilisez les boutons d'appel ou WhatsApp.", en: "Open the ad and use the call or WhatsApp buttons at the bottom." },
+  help_q3: { ar: "كيف أعدّل أو أحذف إعلاني؟", fr: "Comment modifier ou supprimer mon annonce ?", en: "How do I edit or delete my ad?" },
+  help_a3: { ar: "افتح إعلانك من (إعلاناتي) في حسابك، وستجد خيار الحذف.", fr: "Ouvrez votre annonce depuis (Mes annonces) dans votre profil.", en: "Open your ad from (My Ads) in your profile to find the delete option." },
+  help_q4: { ar: "هل النشر مجاني؟", fr: "La publication est-elle gratuite ?", en: "Is posting free?" },
+  help_a4: { ar: "نعم، نشر الإعلانات الأساسية مجاني تمامًا في MauriOne.", fr: "Oui, la publication de base est entièrement gratuite.", en: "Yes, basic ad posting is completely free on MauriOne." },
+  help_contact: { ar: "تواصل معنا", fr: "Contactez-nous", en: "Contact us" },
+  help_contact_sub: { ar: "للاستفسارات والدعم، راسلنا عبر البريد:", fr: "Pour toute question, écrivez-nous :", en: "For questions and support, email us:" },
   help_sub: { ar: "الأسئلة الشائعة وتواصل معنا", fr: "FAQ et contact", en: "FAQ and contact" },
   logout: { ar: "تسجيل الخروج", fr: "Se déconnecter", en: "Log out" },
   logout_sub: { ar: "تسجيل خروج من حسابك", fr: "Déconnexion de votre compte", en: "Sign out of your account" },
@@ -302,6 +315,15 @@ const T = {
   reviews_screen_title: { ar: "التقييمات", fr: "Évaluations", en: "Reviews" },
   reviews_avg: { ar: "متوسط التقييم", fr: "Note moyenne", en: "Average rating" },
   reviews_count: { ar: "تقييم", fr: "avis", en: "reviews" },
+  ads: { ar: "إعلان", fr: "annonces", en: "ads" },
+  close: { ar: "إغلاق", fr: "Fermer", en: "Close" },
+  seller_ads: { ar: "إعلانات البائع", fr: "Annonces du vendeur", en: "Seller's ads" },
+  pin_location: { ar: "حدّد موقعك على الخريطة", fr: "Épinglez votre position", en: "Pin your location" },
+  use_my_location: { ar: "استخدم موقعي الحالي", fr: "Utiliser ma position", en: "Use my location" },
+  locating: { ar: "جارٍ تحديد الموقع...", fr: "Localisation...", en: "Locating..." },
+  location_set: { ar: "تم تحديد الموقع ✓", fr: "Position définie ✓", en: "Location set ✓" },
+  geo_denied: { ar: "تعذّر الوصول للموقع، فعّل الإذن", fr: "Accès refusé, activez l'autorisation", en: "Location denied, enable permission" },
+  geo_unsupported: { ar: "المتصفح لا يدعم تحديد الموقع", fr: "Géolocalisation non supportée", en: "Geolocation not supported" },
   reviews_empty: { ar: "لا توجد تقييمات بعد", fr: "Aucun avis", en: "No reviews yet" },
   rate_seller: { ar: "تقييم البائع", fr: "Évaluer le vendeur", en: "Rate seller" },
   your_rating: { ar: "تقييمك", fr: "Votre note", en: "Your rating" },
@@ -470,6 +492,34 @@ function hexToRgba(hex, alpha) {
   const g = parseInt(h.substring(2, 4), 16);
   const b = parseInt(h.substring(4, 6), 16);
   return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// وقت نسبي حقيقي (منذ دقيقة/ساعة/يوم) من طابع زمني
+function timeAgo(ts, lang) {
+  if (!ts) return lang === "fr" ? "à l'instant" : lang === "en" ? "just now" : "الآن";
+  let d;
+  try { d = ts.toDate ? ts.toDate() : new Date(ts); } catch (e) { d = new Date(); }
+  const sec = Math.floor((Date.now() - d.getTime()) / 1000);
+  const L = {
+    now: { ar: "الآن", fr: "à l'instant", en: "just now" },
+    min: { ar: "منذ دقيقة", fr: "il y a 1 min", en: "1 min ago" },
+    mins: { ar: (n) => `منذ ${n} دقيقة`, fr: (n) => `il y a ${n} min`, en: (n) => `${n} min ago` },
+    hour: { ar: "منذ ساعة", fr: "il y a 1 h", en: "1 hour ago" },
+    hours: { ar: (n) => `منذ ${n} ساعة`, fr: (n) => `il y a ${n} h`, en: (n) => `${n} hours ago` },
+    day: { ar: "منذ يوم", fr: "hier", en: "1 day ago" },
+    days: { ar: (n) => `منذ ${n} يوم`, fr: (n) => `il y a ${n} j`, en: (n) => `${n} days ago` },
+  };
+  const g = (o) => (typeof o[lang] === "function" ? o[lang] : (n) => o[lang]);
+  if (sec < 60) return L.now[lang];
+  const min = Math.floor(sec / 60);
+  if (min < 2) return L.min[lang];
+  if (min < 60) return g(L.mins)(min);
+  const hr = Math.floor(min / 60);
+  if (hr < 2) return L.hour[lang];
+  if (hr < 24) return g(L.hours)(hr);
+  const day = Math.floor(hr / 24);
+  if (day < 2) return L.day[lang];
+  return g(L.days)(day);
 }
 
 // ---------- i18n context ----------
@@ -1126,18 +1176,33 @@ function HomeScreen({ ads, favorites, onToggleFav, onOpenAd, onSelectCategory, o
 function SearchScreen({ ads, favorites, onToggleFav, onOpenAd, initialCat }) {
   const { t, lang, setLang, dir } = useT();
   const [q, setQ] = useState("");
+  const [applied, setApplied] = useState("");   // النص المطبّق فعليًا بعد الضغط على بحث
   const [cat, setCat] = useState(initialCat && initialCat !== "all" ? initialCat : CATEGORIES[1].id);
   const [city, setCity] = useState("all");
-  const [saveSearch, setSaveSearch] = useState(false);
+  const [recent, setRecent] = useState(() => Store.get("maurione_recent_search", []) || []);
+  const [showRecent, setShowRecent] = useState(false);
+
+  const runSearch = (term) => {
+    const val = (term !== undefined ? term : q).trim();
+    setApplied(val);
+    if (term !== undefined) setQ(term);
+    if (val) {
+      const next = [val, ...recent.filter((r) => r !== val)].slice(0, 8);
+      setRecent(next);
+      try { Store.set("maurione_recent_search", next); } catch (e) {}
+    }
+    setShowRecent(false);
+  };
+  const clearRecent = () => { setRecent([]); try { Store.set("maurione_recent_search", []); } catch (e) {} };
 
   const results = useMemo(() => {
     return ads.filter((a) => {
-      const matchQ = q.trim() === "" || a.title.includes(q.trim());
+      const matchQ = applied === "" || (a.title && a.title.includes(applied)) || (a.desc && a.desc.includes(applied));
       const matchCat = cat === "all" || a.cat === cat;
       const matchCity = city === "all" || a.city === city;
       return matchQ && matchCat && matchCity;
     });
-  }, [ads, q, cat, city]);
+  }, [ads, applied, cat, city]);
 
   return (
     <div className="pb-6">
@@ -1146,17 +1211,40 @@ function SearchScreen({ ads, favorites, onToggleFav, onOpenAd, initialCat }) {
           <h1 className="text-xl font-bold" style={{ color: C.white }}>{t("advanced_search")}</h1>
           <p className="text-xs" style={{ color: C.gray }}>{t("search_subtitle")}</p>
         </div>
-        <button onClick={() => toast(t("saved_searches"))} className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg" style={{ border: `1px solid ${C.border}`, color: C.gray }}>
+        <button onClick={() => setShowRecent((v) => !v)} className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg" style={{ border: `1px solid ${C.border}`, color: C.gray }}>
           <Bookmark size={13} /> {t("saved")}
         </button>
       </div>
 
+      {showRecent && (
+        <div className="px-4 pb-2">
+          <div className="rounded-xl p-3" style={{ background: C.card, border: `1px solid ${C.border}` }}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-bold" style={{ color: C.white }}>{t("saved_searches")}</span>
+              {recent.length > 0 && <button onClick={clearRecent} className="text-[11px]" style={{ color: C.red }}>{t("clear_all")}</button>}
+            </div>
+            {recent.length === 0 ? (
+              <p className="text-xs text-center py-2" style={{ color: C.grayDim }}>{t("no_recent_search")}</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {recent.map((r) => (
+                  <button key={r} onClick={() => runSearch(r)} className="text-xs px-3 py-1.5 rounded-lg flex items-center gap-1" style={{ background: C.cardAlt, color: C.white }}>
+                    <Clock size={11} color={C.gray} /> {r}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="px-4 pt-3 pb-3 flex items-center gap-2">
         <div className="flex-1 flex items-center gap-2 rounded-xl px-3 py-2.5" style={{ border: `1px solid ${C.border}` }}>
           <Search size={16} color={C.gray} />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("search_short")} className="bg-transparent outline-none text-sm w-full text-right" style={{ color: C.white }} />
-          <button onClick={() => toast(t("voice_soon"))}><Mic size={15} color={C.green} /></button>
+          <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runSearch(); }} placeholder={t("search_short")} className="bg-transparent outline-none text-sm w-full text-right" style={{ color: C.white }} />
+          {q && <button onClick={() => { setQ(""); setApplied(""); }}><X size={14} color={C.gray} /></button>}
         </div>
+        <button onClick={() => runSearch()} className="px-4 py-2.5 rounded-xl font-bold text-sm shrink-0" style={{ background: C.green, color: "#07130E" }}>{t("search_btn")}</button>
       </div>
 
       <div className="px-4 pb-2 text-sm font-bold" style={{ color: C.white }}>{t("choose_category")}</div>
@@ -1209,16 +1297,6 @@ function SearchScreen({ ads, favorites, onToggleFav, onOpenAd, initialCat }) {
         </div>
       )}
 
-      <div className="px-4 flex items-center justify-between py-2 mb-2 rounded-xl" style={{ background: C.card, border: `1px solid ${C.border}` }}>
-        <div className="flex items-center gap-2 px-2">
-          <Bell size={15} color={C.gray} />
-          <span className="text-xs" style={{ color: C.gray }}>{t("notify_matching")}</span>
-        </div>
-        <button onClick={() => setSaveSearch((s) => !s)} className="w-10 h-6 rounded-full relative shrink-0 ml-2" style={{ background: saveSearch ? C.green : C.border }}>
-          <div className="w-4.5 h-4.5 rounded-full absolute top-0.5 transition-all" style={{ width: 18, height: 18, background: C.white, [saveSearch ? "left" : "right"]: 2 }} />
-        </button>
-      </div>
-
       <div className="px-4 pb-2 text-xs" style={{ color: C.gray }}>{results.length} {t("results")}</div>
       <div className="px-4 grid grid-cols-2 gap-3 mo-search-grid">
         {results.map((ad) => (
@@ -1241,11 +1319,13 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
   const [rateStars, setRateStars] = useState(0);
   const [rateText, setRateText] = useState("");
   const [showFull, setShowFull] = useState(false);
+  const [showSeller, setShowSeller] = useState(false);
   const fireToast = (m) => { setToast(m); setTimeout(() => setToast(""), 1600); };
   const cat = CATEGORIES.find((c) => c.id === ad.cat);
   const gallery = ad.images && ad.images.length > 0 ? ad.images : [];
   const totalImgs = gallery.length;
   const similar = ads.filter((a) => a.cat === ad.cat && a.id !== ad.id).slice(0, 4);
+  const sellerAds = ads.filter((a) => a.ownerId && a.ownerId === ad.ownerId);
 
   return (
     <div className="pb-28 relative">
@@ -1264,7 +1344,7 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
           {onDelete && (
             <button onClick={() => setConfirmDel(true)} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ border: `1px solid ${C.red}` }}><X size={15} color={C.red} /></button>
           )}
-          <button onClick={() => fireToast(t("copied_share"))} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ border: `1px solid ${C.border}` }}><Share2 size={14} color={C.white} /></button>
+          <button onClick={async () => { const url = `https://maurione-web.vercel.app`; const shareData = { title: ad.title, text: `${ad.title} - ${ad.price} ${ad.currency || ""}`, url }; try { if (navigator.share) { await navigator.share(shareData); } else { await navigator.clipboard.writeText(`${ad.title} - ${url}`); fireToast(t("copied_share")); } } catch (e) {} }} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ border: `1px solid ${C.border}` }}><Share2 size={14} color={C.white} /></button>
           <button onClick={() => onToggleFav(ad.id)} className="w-9 h-9 rounded-full flex items-center justify-center" style={{ border: `1px solid ${isFav ? C.red : C.border}` }}><Heart size={14} color={isFav ? C.red : C.white} fill={isFav ? C.red : "none"} /></button>
         </div>
       </div>
@@ -1345,7 +1425,7 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
           <div className="w-24 h-16 rounded-lg flex items-center justify-center shrink-0" style={{ background: C.cardAlt }}>
             <MapPin size={20} color={C.green} />
           </div>
-          <button onClick={() => fireToast(t("open_map"))} className="text-xs px-2 py-2 rounded-lg font-bold shrink-0" style={{ border: `1px solid ${C.border}`, color: C.white }}>{t("view_map")}</button>
+          <button onClick={() => { const url = (ad.lat && ad.lng) ? `https://www.google.com/maps?q=${ad.lat},${ad.lng}` : `https://www.google.com/maps/search/${encodeURIComponent((ad.city || "") + " " + (ad.area || "") + " Mauritania")}`; window.open(url, "_blank"); }} className="text-xs px-2 py-2 rounded-lg font-bold shrink-0" style={{ border: `1px solid ${C.border}`, color: C.white }}>{t("view_map")}</button>
         </div>
 
         <div className="rounded-xl p-3 mb-4" style={{ background: C.card, border: `1px solid ${C.border}` }}>
@@ -1384,12 +1464,52 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
               <p className="text-sm font-bold flex items-center gap-1" style={{ color: C.white }}>{ad.seller}{ad.verified && <CheckCircle2 size={13} color={C.green} />}</p>
               <p className="text-xs flex items-center gap-1" style={{ color: C.grayDim }}><Star size={11} color={C.gold} fill={C.gold} />{ad.rating} ({ad.reviews})</p>
             </div>
-            <button onClick={() => fireToast(t("view_seller_profile"))} className="text-xs px-3 py-2 rounded-lg font-bold shrink-0" style={{ border: `1px solid ${C.green}`, color: C.green }}>{t("view_profile")}</button>
+            <button onClick={() => setShowSeller(true)} className="text-xs px-3 py-2 rounded-lg font-bold shrink-0" style={{ border: `1px solid ${C.green}`, color: C.green }}>{t("view_profile")}</button>
           </div>
           <button onClick={() => { setRateStars(0); setRateText(""); setRating(true); }} className="w-full mt-3 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5" style={{ background: hexToRgba(C.gold, 0.14), color: C.gold, border: `1px solid ${hexToRgba(C.gold, 0.4)}` }}>
             <Star size={14} /> {t("rate_seller")}
           </button>
         </div>
+
+        {showSeller && (
+          <div className="fixed inset-0 z-[70] flex items-end justify-center" style={{ background: "rgba(0,0,0,0.6)" }} onClick={() => setShowSeller(false)}>
+            <div onClick={(e) => e.stopPropagation()} className="w-full rounded-t-3xl p-5 flex flex-col gap-3" style={{ maxWidth: 420, maxHeight: "85vh", overflowY: "auto", background: C.bg, borderTop: `1px solid ${C.border}` }}>
+              <div className="w-10 h-1 rounded-full mx-auto mb-1" style={{ background: C.border }} />
+              <div className="flex items-center gap-3">
+                <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center shrink-0" style={{ background: C.cardAlt }}>
+                  {ad.sellerAvatar ? <img src={ad.sellerAvatar} alt="" className="w-full h-full object-cover" /> : <User size={26} color={C.gray} />}
+                </div>
+                <div className="flex-1">
+                  <p className="text-lg font-bold flex items-center gap-1" style={{ color: C.white }}>{ad.seller}{ad.verified && <CheckCircle2 size={15} color={C.green} />}</p>
+                  {ad.sellerUsername && <p className="text-xs" style={{ color: C.green }}>@{ad.sellerUsername}</p>}
+                  <p className="text-xs flex items-center gap-1 mt-1" style={{ color: C.gray }}><Star size={12} color={C.gold} fill={C.gold} />{ad.rating || 0} ({ad.reviews || 0} {t("reviews_count")}) · {sellerAds.length} {t("ads")}</p>
+                </div>
+              </div>
+
+              <div className="flex gap-2 mt-1">
+                <button onClick={() => { const p = (ad.phone || "").replace(/[^0-9+]/g, ""); if (p) window.location.href = `tel:${p}`; }} className="flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5" style={{ background: C.green, color: "#07130E" }}><Phone size={14} /> {t("call")}</button>
+                <button onClick={() => { let p = (ad.phone || "").replace(/[^0-9]/g, ""); if (p.startsWith("0")) p = p.slice(1); if (p && !p.startsWith("222")) p = "222" + p; if (p) window.open(`https://wa.me/${p}`, "_blank"); }} className="flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5" style={{ background: "#22C55E", color: "#06210F" }}><Send size={14} /> {t("whatsapp")}</button>
+              </div>
+
+              <p className="text-sm font-bold mt-2" style={{ color: C.white }}>{t("seller_ads")} ({sellerAds.length})</p>
+              <div className="flex flex-col gap-2">
+                {sellerAds.map((a) => (
+                  <button key={a.id} onClick={() => { setShowSeller(false); onOpenAd(a); }} className="flex items-center gap-3 p-2 rounded-xl text-right" style={{ background: C.card, border: `1px solid ${C.border}` }}>
+                    <div className="w-14 h-14 rounded-lg overflow-hidden flex items-center justify-center shrink-0" style={{ background: C.cardAlt }}>
+                      {a.images && a.images[0] ? <img src={a.images[0]} alt="" className="w-full h-full object-cover" /> : <CategoryIcon cat={CATEGORIES.find((c) => c.id === a.cat)} size={16} box={56} active />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate" style={{ color: C.white }}>{a.title}</p>
+                      <p className="text-xs font-bold" style={{ color: C.green }}>{a.price} {a.currency}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <button onClick={() => setShowSeller(false)} className="w-full py-3 rounded-xl text-sm font-bold mt-1" style={{ border: `1px solid ${C.border}`, color: C.white }}>{t("close")}</button>
+            </div>
+          </div>
+        )}
 
         {rating && (
           <div className="fixed inset-0 z-[70] flex items-end justify-center" style={{ background: "rgba(0,0,0,0.6)" }} onClick={() => setRating(false)}>
@@ -1435,13 +1555,13 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
         <button onClick={() => onToggleFav(ad.id)} className="w-12 py-3 rounded-xl flex items-center justify-center shrink-0" style={{ border: `1px solid ${C.red}` }}>
           <Heart size={16} color={C.red} fill={isFav ? C.red : "none"} />
         </button>
-        <button onClick={() => fireToast(t("calling") + " " + ad.phone)} className="flex-1 py-3 rounded-xl flex items-center justify-center gap-1.5 font-bold text-sm" style={{ background: C.green, color: "#07130E" }}>
+        <button onClick={() => { const p = (ad.phone || "").replace(/[^0-9+]/g, ""); if (p) window.location.href = `tel:${p}`; else fireToast(t("calling")); }} className="flex-1 py-3 rounded-xl flex items-center justify-center gap-1.5 font-bold text-sm" style={{ background: C.green, color: "#07130E" }}>
           <Phone size={14} /> {t("call")}
         </button>
         <button onClick={() => fireToast(t("open_chat"))} className="flex-1 py-3 rounded-xl flex items-center justify-center gap-1.5 font-bold text-sm" style={{ border: `1px solid ${C.blue}`, color: C.blue }}>
           <MessageCircle size={14} /> {t("chat")}
         </button>
-        <button onClick={() => fireToast(t("opening_whatsapp"))} className="flex-1 py-3 rounded-xl flex items-center justify-center gap-1.5 font-bold text-sm" style={{ background: "#22C55E", color: "#06210F" }}>
+        <button onClick={() => { let p = (ad.phone || "").replace(/[^0-9]/g, ""); if (p.startsWith("0")) p = p.slice(1); if (p && !p.startsWith("222")) p = "222" + p; const msg = encodeURIComponent(`مرحبًا، أنا مهتم بإعلانك: ${ad.title}`); if (p) window.open(`https://wa.me/${p}?text=${msg}`, "_blank"); else fireToast(t("opening_whatsapp")); }} className="flex-1 py-3 rounded-xl flex items-center justify-center gap-1.5 font-bold text-sm" style={{ background: "#22C55E", color: "#06210F" }}>
           <Send size={14} /> {t("whatsapp")}
         </button>
       </div>
@@ -1550,14 +1670,39 @@ function StepDots({ step }) {
 function DynamicField({ field, value, onChange }) {
   const { t, lang } = useT();
   const base = { border: `1px solid ${C.border}`, color: C.white, background: "transparent" };
+  const OTHER = ["أخرى", "Autre", "Other"];
+  // هل القيمة الحالية قيمة حرة (ليست من الخيارات)؟
+  const isCustom = field.type === "select" && value && !field.options.includes(value);
+  const [otherMode, setOtherMode] = React.useState(isCustom);
   return (
     <div>
       <label className="text-xs mb-1 block" style={{ color: C.gray }}>{fieldLabel(field.key, lang)}</label>
       {field.type === "select" ? (
-        <select value={value || ""} onChange={(e) => onChange(e.target.value)} className="w-full rounded-xl px-3 py-2.5 text-sm outline-none text-right" style={base}>
-          <option value="" style={{ background: C.card }}>{t("choose")}</option>
-          {field.options.map((o) => <option key={o} value={o} style={{ background: C.card }}>{o}</option>)}
-        </select>
+        <>
+          <select
+            value={otherMode ? "__other__" : (value || "")}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (v === "__other__" || OTHER.includes(v)) { setOtherMode(true); onChange(""); }
+              else { setOtherMode(false); onChange(v); }
+            }}
+            className="w-full rounded-xl px-3 py-2.5 text-sm outline-none text-right"
+            style={base}
+          >
+            <option value="" style={{ background: C.card }}>{t("choose")}</option>
+            {field.options.filter((o) => !OTHER.includes(o)).map((o) => <option key={o} value={o} style={{ background: C.card }}>{o}</option>)}
+            <option value="__other__" style={{ background: C.card }}>{t("type_other")}</option>
+          </select>
+          {otherMode && (
+            <input
+              value={value || ""}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder={t("type_other_placeholder")}
+              className="w-full mt-2 rounded-xl px-3 py-2.5 text-sm outline-none text-right"
+              style={base}
+            />
+          )}
+        </>
       ) : (
         <input
           value={value || ""}
@@ -1578,7 +1723,8 @@ function AddAdScreen({ onPublish, onExit }) {
   const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(0);
   const [publishing, setPublishing] = useState(false);
-  const [form, setForm] = useState({ cat: "cars", adType: "type_sale", title: "", price: "", condition: "cond_new", desc: "", city: "", area: "", phone: "", whatsapp: true, images: [], specs: {} });
+  const [locating, setLocating] = useState(false);
+  const [form, setForm] = useState({ cat: "cars", adType: "type_sale", title: "", price: "", condition: "cond_new", desc: "", city: "", area: "", phone: "", whatsapp: true, images: [], specs: {}, lat: null, lng: null });
   const [done, setDone] = useState(false);
   const update = (k, v) => setForm((f) => ({ ...f, [k]: v }));
   const updateSpec = (k, v) => setForm((f) => ({ ...f, specs: { ...f.specs, [k]: v } }));
@@ -1620,7 +1766,7 @@ function AddAdScreen({ onPublish, onExit }) {
           <button onClick={onExit} className="w-full py-3 rounded-xl font-bold text-sm" style={{ background: C.green, color: "#07130E" }}>
             {t("back_home")}
           </button>
-          <button onClick={() => { setDone(false); setStep(0); setForm({ cat: "cars", adType: "type_sale", title: "", price: "", condition: "cond_new", desc: "", city: "", area: "", phone: "", whatsapp: true, images: [], specs: {} }); }} className="w-full py-3 rounded-xl font-bold text-sm" style={{ border: `1px solid ${C.border}`, color: C.white }}>
+          <button onClick={() => { setDone(false); setStep(0); setForm({ cat: "cars", adType: "type_sale", title: "", price: "", condition: "cond_new", desc: "", city: "", area: "", phone: "", whatsapp: true, images: [], specs: {}, lat: null, lng: null }); }} className="w-full py-3 rounded-xl font-bold text-sm" style={{ border: `1px solid ${C.border}`, color: C.white }}>
             {t("post_another")}
           </button>
         </div>
@@ -1780,8 +1926,34 @@ function AddAdScreen({ onPublish, onExit }) {
               <label className="text-xs mb-1 block" style={{ color: C.gray }}>{t("neighborhood")}</label>
               <input value={form.area} onChange={(e) => update("area", e.target.value)} placeholder={t("neighborhood_ph")} className="w-full rounded-xl px-3 py-2.5 text-sm outline-none text-right" style={{ border: `1px solid ${C.border}`, color: C.white, background: "transparent" }} />
             </div>
-            <div className="rounded-xl h-32 flex items-center justify-center" style={{ background: C.card, border: `1px solid ${C.border}` }}>
-              <MapPin size={22} color={C.green} />
+            <div>
+              <label className="text-xs mb-1 block" style={{ color: C.gray }}>{t("pin_location")}</label>
+              <button
+                onClick={() => {
+                  if (!navigator.geolocation) { toast(t("geo_unsupported")); return; }
+                  setLocating(true);
+                  navigator.geolocation.getCurrentPosition(
+                    (pos) => { update("lat", pos.coords.latitude); update("lng", pos.coords.longitude); setLocating(false); toast(t("location_set")); },
+                    (err) => { setLocating(false); toast(t("geo_denied")); },
+                    { enableHighAccuracy: true, timeout: 10000 }
+                  );
+                }}
+                className="w-full rounded-xl h-24 flex flex-col items-center justify-center gap-1.5"
+                style={{ background: (form.lat && form.lng) ? hexToRgba(C.green, 0.1) : C.card, border: `1px solid ${(form.lat && form.lng) ? C.green : C.border}` }}
+              >
+                {locating ? (
+                  <><div className="w-5 h-5 rounded-full border-2 animate-spin" style={{ borderColor: C.green, borderTopColor: "transparent" }} /><span className="text-xs" style={{ color: C.green }}>{t("locating")}</span></>
+                ) : (form.lat && form.lng) ? (
+                  <><CheckCircle2 size={22} color={C.green} /><span className="text-xs font-bold" style={{ color: C.green }}>{t("location_set")}</span><span className="text-[10px]" style={{ color: C.grayDim }}>{form.lat.toFixed(4)}, {form.lng.toFixed(4)}</span></>
+                ) : (
+                  <><MapPin size={22} color={C.green} /><span className="text-xs" style={{ color: C.gray }}>{t("use_my_location")}</span></>
+                )}
+              </button>
+              {form.lat && form.lng && (
+                <button onClick={() => window.open(`https://www.google.com/maps?q=${form.lat},${form.lng}`, "_blank")} className="text-xs mt-1.5 flex items-center gap-1" style={{ color: C.green }}>
+                  <Eye size={12} /> {t("view_map")}
+                </button>
+              )}
             </div>
           </>
         )}
@@ -2072,7 +2244,39 @@ function MyAdsScreen({ ads, favorites, onToggleFav, onOpenAd, onBack, onDelete, 
   );
 }
 
-function SettingsScreen({ onBack, onLogout }) {
+function HelpScreen({ onBack }) {
+  const { t } = useT();
+  const faqs = [
+    { q: t("help_q1"), a: t("help_a1") },
+    { q: t("help_q2"), a: t("help_a2") },
+    { q: t("help_q3"), a: t("help_a3") },
+    { q: t("help_q4"), a: t("help_a4") },
+  ];
+  const [open, setOpen] = useState(0);
+  return (
+    <div className="pb-6">
+      <TopBar onBack={onBack} title={t("help_support")} />
+      <div className="px-4 pt-2 flex flex-col gap-2">
+        {faqs.map((f, i) => (
+          <div key={i} className="rounded-2xl overflow-hidden" style={{ background: C.card, border: `1px solid ${C.border}` }}>
+            <button onClick={() => setOpen(open === i ? -1 : i)} className="w-full flex items-center justify-between px-4 py-3.5 text-right">
+              <span className="text-sm font-bold flex-1" style={{ color: C.white }}>{f.q}</span>
+              <ChevronDown size={16} color={C.gray} style={{ transform: open === i ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
+            </button>
+            {open === i && <p className="px-4 pb-4 text-xs leading-relaxed" style={{ color: C.gray }}>{f.a}</p>}
+          </div>
+        ))}
+        <div className="rounded-2xl p-4 mt-2 text-center" style={{ background: hexToRgba(C.green, 0.08), border: `1px solid ${hexToRgba(C.green, 0.3)}` }}>
+          <p className="text-sm font-bold mb-1" style={{ color: C.white }}>{t("help_contact")}</p>
+          <p className="text-xs mb-2" style={{ color: C.gray }}>{t("help_contact_sub")}</p>
+          <a href="mailto:support@maurione.mr" className="text-sm font-bold" style={{ color: C.green }}>support@maurione.mr</a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SettingsScreen({ onBack, onLogout, onOpenHelp }) {
   const { t, lang, theme, toggleTheme, setLang } = useT();
   const [push, setPush] = useState(true);
   const langOrder = ["ar", "fr", "en"];
@@ -2114,7 +2318,7 @@ function SettingsScreen({ onBack, onLogout }) {
         <Section title={t("settings_account")}>
           <Row icon={User} label={t("edit_profile")} onClick={onBack} />
           <Row icon={ShieldCheck} label={t("settings_privacy")} onClick={() => toast(t("settings_privacy"))} />
-          <Row icon={HelpCircle} label={t("help_support")} onClick={() => toast(t("help_support"))} last />
+          <Row icon={HelpCircle} label={t("help_support")} onClick={onOpenHelp} last />
         </Section>
 
         <Section title={t("settings_about")}>
@@ -2334,7 +2538,7 @@ function FavoritesScreen({ ads, favorites, onToggleFav, onOpenAd, onBack }) {
 }
 
 // ---------- Profile ----------
-function ProfileScreen({ profile, setProfile, myAdsCount, totalViews, onOpenFavorites, onOpenMyAds, onOpenSettings, onOpenStats, onOpenPlans, onOpenReviews, favCount, msgCount, notifCount, onLogout, onOpenNotifs, onOpenMessages }) {
+function ProfileScreen({ profile, setProfile, myAdsCount, totalViews, onOpenFavorites, onOpenMyAds, onOpenSettings, onOpenStats, onOpenPlans, onOpenReviews, onOpenHelp, favCount, msgCount, notifCount, onLogout, onOpenNotifs, onOpenMessages }) {
   const { t, lang, setLang, dir } = useT();
   const avatarInputRef = useRef(null);
   const [editing, setEditing] = useState(false);
@@ -2356,7 +2560,7 @@ function ProfileScreen({ profile, setProfile, myAdsCount, totalViews, onOpenFavo
     { label: t("subscription"), sub: t("subscription_sub"), icon: Wallet, color: C.gold, onClick: onOpenPlans },
     { label: t("reviews_title"), sub: t("reviews_sub"), icon: Star, color: C.blue, onClick: onOpenReviews },
     { label: t("settings"), sub: t("settings_sub"), icon: Settings, color: C.gray, onClick: onOpenSettings },
-    { label: t("help_support"), sub: t("help_sub"), icon: HelpCircle, color: "#A78BFA", onClick: () => toast(t("open_help")) },
+    { label: t("help_support"), sub: t("help_sub"), icon: HelpCircle, color: "#A78BFA", onClick: onOpenHelp },
     { label: t("logout"), sub: t("logout_sub"), icon: LogOut, color: C.red, onClick: onLogout },
   ];
   const stats = [
@@ -2452,7 +2656,7 @@ function ProfileScreen({ profile, setProfile, myAdsCount, totalViews, onOpenFavo
 
             <div>
               <label className="text-xs mb-1 block" style={{ color: C.gray }}>{t("full_name")}</label>
-              <input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} className="w-full rounded-xl px-3 py-2.5 text-sm outline-none text-right" style={{ border: `1px solid ${C.border}`, color: C.white, background: "transparent" }} />
+              <input value={draft.name} onChange={(e) => { const nm = e.target.value; const uname = nm.trim().toLowerCase().replace(/\s+/g, "_").replace(/[^a-z0-9_\u0600-\u06FF]/g, ""); setDraft({ ...draft, name: nm, username: uname }); }} className="w-full rounded-xl px-3 py-2.5 text-sm outline-none text-right" style={{ border: `1px solid ${C.border}`, color: C.white, background: "transparent" }} />
             </div>
             <div>
               <label className="text-xs mb-1 block" style={{ color: C.gray }}>{t("username")}</label>
@@ -2504,6 +2708,7 @@ function MauriOneInner() {
   const [showStats, setShowStats] = useState(false);
   const [showPlans, setShowPlans] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const [profile, setProfile] = useState(() => {
     const saved = Store.get(PROFILE_KEY, null);
     return saved || { name: "محمد الأمين", username: "mohamed_amine", bio: "", city: "نواكشوط", avatar: null };
@@ -2525,9 +2730,11 @@ function MauriOneInner() {
         setUser(u);
         if (u) {
           // تحديث الملف الشخصي ببيانات حساب قوقل
+          const uname = (u.displayName || "user").trim().toLowerCase().replace(/\s+/g, "_").replace(/[^a-z0-9_\u0600-\u06FF]/g, "");
           setProfile((p) => ({
             ...p,
             name: u.displayName || p.name,
+            username: uname || p.username,
             avatar: u.photoURL || p.avatar,
           }));
         }
@@ -2556,6 +2763,9 @@ function MauriOneInner() {
   // تسجيل الخروج
   const handleSignOut = async () => {
     try { await signOut(auth); } catch (e) {}
+    // مسح بيانات الملف المحلية بعد الخروج
+    setProfile({ name: "زائر", username: "guest", bio: "", city: "نواكشوط", avatar: null });
+    try { Store.set(PROFILE_KEY, { name: "زائر", username: "guest", bio: "", city: "نواكشوط", avatar: null }); } catch (e) {}
   };
 
   // مزامنة الإعلانات من Firestore لحظيًا (تظهر لكل المستخدمين)
@@ -2565,13 +2775,13 @@ function MauriOneInner() {
       const unsub = onSnapshot(q, (snap) => {
         const list = snap.docs.map((d) => {
           const data = d.data();
-          return { ...data, id: d.id, mine: data.ownerId === ownerId };
+          return { ...data, id: d.id, mine: data.ownerId === ownerId, time: timeAgo(data.createdAt, lang) };
         });
         setAds(list);
       }, (err) => { console.error("Firestore:", err); });
       return () => unsub();
     } catch (e) { console.error(e); }
-  }, [ownerId]);
+  }, [ownerId, lang]);
 
   const myAdsCount = ads.filter((a) => a.mine).length;
   const totalViews = ads.filter((a) => a.mine).reduce((sum, a) => sum + (a.views || 0), 0);
@@ -2601,13 +2811,17 @@ function MauriOneInner() {
     const specsArr = fieldDefs
       .filter((f) => form.specs[f.key])
       .map((f) => ({ label: fieldLabel(f.key, lang), value: form.specs[f.key], icon: f.key })); // objects (Firestore-safe)
-    const nowLabel = lang === "fr" ? "maintenant" : lang === "en" ? "now" : "الآن";
     const newAd = {
       cat: form.cat, title: form.title, price: form.price, currency: t("currency"),
-      city: form.city, area: form.area || "", time: nowLabel, views: 0, featured: true,
+      city: form.city, area: form.area || "", views: 0, featured: true,
       condition: NO_CONDITION_CATS.includes(form.cat) ? t(form.adType) : t(form.condition),
-      desc: form.desc, specs: specsArr, phone: form.phone, seller: profile.name || t("guest"),
+      desc: form.desc, specs: specsArr, phone: form.phone,
+      whatsapp: !!form.whatsapp,
+      seller: profile.name || t("guest"),
+      sellerUsername: profile.username || "",
+      sellerAvatar: profile.avatar || null,
       rating: 0, reviews: 0, verified: false, images: form.images || [],
+      lat: form.lat || null, lng: form.lng || null,
       ownerId: ownerId, createdAt: serverTimestamp(),
     };
     try {
@@ -2667,10 +2881,12 @@ function MauriOneInner() {
     body = <StatsScreen ads={ads} onBack={() => setShowStats(false)} onOpenAd={openAd} />;
   } else if (showPlans) {
     body = <PlansScreen onBack={() => setShowPlans(false)} />;
+  } else if (showHelp) {
+    body = <HelpScreen onBack={() => setShowHelp(false)} />;
   } else if (showReviews) {
     body = <ReviewsScreen onBack={() => setShowReviews(false)} />;
   } else if (showSettings) {
-    body = <SettingsScreen onBack={() => setShowSettings(false)} onLogout={() => { handleSignOut(); setShowSettings(false); setShowNotifs(false); setShowFavorites(false); setShowMyAds(false); setSelectedAd(null); setTab("home"); setPhase("onboarding"); }} />;
+    body = <SettingsScreen onOpenHelp={() => { setShowSettings(false); setShowHelp(true); }} onBack={() => setShowSettings(false)} onLogout={() => { handleSignOut(); setShowSettings(false); setShowNotifs(false); setShowFavorites(false); setShowMyAds(false); setSelectedAd(null); setTab("home"); setPhase("onboarding"); }} />;
   } else if (showMyAds) {
     body = <MyAdsScreen ads={ads} favorites={favorites} onToggleFav={toggleFav} onOpenAd={openAd} onBack={() => setShowMyAds(false)} onDelete={deleteAd} onClearAll={clearAllAds} onRestore={restoreSeed} />;
   } else if (showFavorites) {
@@ -2686,10 +2902,10 @@ function MauriOneInner() {
   } else if (tab === "messages") {
     body = <MessagesScreen onBack={() => setTab("home")} />;
   } else if (tab === "profile") {
-    body = <ProfileScreen profile={profile} setProfile={setProfile} myAdsCount={myAdsCount} totalViews={totalViews} onOpenFavorites={() => setShowFavorites(true)} onOpenMyAds={() => setShowMyAds(true)} onOpenSettings={() => setShowSettings(true)} onOpenStats={() => setShowStats(true)} onOpenPlans={() => setShowPlans(true)} onOpenReviews={() => setShowReviews(true)} favCount={favorites.size} msgCount={unreadMsgs} notifCount={unreadNotifs} onLogout={() => { handleSignOut(); setShowNotifs(false); setShowFavorites(false); setShowMyAds(false); setSelectedAd(null); setTab("home"); setPhase("onboarding"); }} onOpenNotifs={() => setShowNotifs(true)} onOpenMessages={() => setTab("messages")} />;
+    body = <ProfileScreen profile={profile} setProfile={setProfile} myAdsCount={myAdsCount} totalViews={totalViews} onOpenFavorites={() => setShowFavorites(true)} onOpenMyAds={() => setShowMyAds(true)} onOpenSettings={() => setShowSettings(true)} onOpenStats={() => setShowStats(true)} onOpenPlans={() => setShowPlans(true)} onOpenReviews={() => setShowReviews(true)} onOpenHelp={() => setShowHelp(true)} favCount={favorites.size} msgCount={unreadMsgs} notifCount={unreadNotifs} onLogout={() => { handleSignOut(); setShowNotifs(false); setShowFavorites(false); setShowMyAds(false); setSelectedAd(null); setTab("home"); setPhase("onboarding"); }} onOpenNotifs={() => setShowNotifs(true)} onOpenMessages={() => setTab("messages")} />;
   }
 
-  const hideNav = !!selectedAd || showNotifs || showFavorites || showMyAds || showSettings || showStats || showPlans || showReviews || tab === "add";
+  const hideNav = !!selectedAd || showNotifs || showFavorites || showMyAds || showSettings || showStats || showPlans || showReviews || showHelp || tab === "add";
 
   return (
     <div dir={dir} className="w-full flex justify-center" style={{ background: "#000", minHeight: "100vh", fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif" }}>
