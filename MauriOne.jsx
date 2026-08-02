@@ -2157,15 +2157,14 @@ function MessagesScreen({ onBack }) {
 // ---------- Favorites ----------
 function MyAdsScreen({ ads, favorites, onToggleFav, onOpenAd, onBack, onDelete, onClearAll, onRestore }) {
   const { t } = useT();
-  const mine = ads;  // manage all ads here so anything can be deleted
+  const mine = ads.filter((a) => a.mine);  // إعلاناتي فقط (اللي أملكها)
   const [confirmId, setConfirmId] = useState(null);
   const [confirmClear, setConfirmClear] = useState(false);
   return (
     <div className="pb-6">
       <TopBar onBack={onBack} title={t("my_ads_title")} right={
         <div className="flex items-center gap-2">
-          <button onClick={onRestore} className="text-xs px-2.5 py-1.5 rounded-lg" style={{ border: `1px solid ${C.border}`, color: C.gray }}>{t("restore_samples")}</button>
-          {ads.length > 0 && <button onClick={() => setConfirmClear(true)} className="text-xs px-2.5 py-1.5 rounded-lg" style={{ border: `1px solid ${C.red}`, color: C.red }}>{t("clear_all")}</button>}
+          {mine.length > 0 && <button onClick={() => setConfirmClear(true)} className="text-xs px-2.5 py-1.5 rounded-lg" style={{ border: `1px solid ${C.red}`, color: C.red }}>{t("clear_all")}</button>}
         </div>
       } />
 
@@ -2580,7 +2579,7 @@ function ProfileScreen({ profile, setProfile, myAdsCount, totalViews, onOpenFavo
         {profile.bio ? <p className="text-xs leading-relaxed mb-2" style={{ color: C.gray }}>{profile.bio}</p> : null}
         <div className="flex items-center gap-3 text-xs mb-3" style={{ color: C.grayDim }}>
           <span className="flex items-center gap-1"><MapPin size={11} />{profile.city || "—"}</span>
-          <span className="flex items-center gap-1"><Calendar size={11} />{t("member_since")} 2024</span>
+          <span className="flex items-center gap-1"><Calendar size={11} />{t("member_since")} {profile.joinedYear || new Date().getFullYear()}</span>
         </div>
         <button onClick={openEdit} className="w-full py-2 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5" style={{ border: `1px solid ${C.green}`, color: C.green }}><Edit3 size={13} /> {t("edit_profile")}</button>
       </div>
@@ -2687,7 +2686,7 @@ function MauriOneInner() {
   const [showHelp, setShowHelp] = useState(false);
   const [profile, setProfile] = useState(() => {
     const saved = Store.get(PROFILE_KEY, null);
-    return saved || { name: "محمد الأمين", username: "mohamed_amine", bio: "", city: "نواكشوط", avatar: null };
+    return saved || { name: "محمد الأمين", username: "mohamed_amine", bio: "", city: "نواكشوط", avatar: null, joinedYear: new Date().getFullYear() };
   });
   useEffect(() => { Store.set(PROFILE_KEY, profile); }, [profile]);
 
@@ -2712,6 +2711,7 @@ function MauriOneInner() {
             name: u.displayName || p.name,
             username: uname || p.username,
             avatar: u.photoURL || p.avatar,
+            joinedYear: p.joinedYear || new Date().getFullYear(),
           }));
         }
       });
@@ -2740,8 +2740,8 @@ function MauriOneInner() {
   const handleSignOut = async () => {
     try { await signOut(auth); } catch (e) {}
     // مسح بيانات الملف المحلية بعد الخروج
-    setProfile({ name: "زائر", username: "guest", bio: "", city: "نواكشوط", avatar: null });
-    try { Store.set(PROFILE_KEY, { name: "زائر", username: "guest", bio: "", city: "نواكشوط", avatar: null }); } catch (e) {}
+    setProfile({ name: "زائر", username: "guest", bio: "", city: "نواكشوط", avatar: null, joinedYear: new Date().getFullYear() });
+    try { Store.set(PROFILE_KEY, { name: "زائر", username: "guest", bio: "", city: "نواكشوط", avatar: null, joinedYear: new Date().getFullYear() }); } catch (e) {}
   };
 
   // مزامنة الإعلانات من Firestore لحظيًا (تظهر لكل المستخدمين)
