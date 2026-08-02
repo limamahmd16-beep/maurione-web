@@ -501,9 +501,9 @@ function setSoundEnabled(on) { _soundOn = on; try { window.localStorage.setItem(
 function isSoundEnabled() { return _soundOn; }
 function playClick() {
   if (!_soundOn) return;
-  // اهتزاز خفيف (يعمل على أغلب أجهزة أندرويد)
-  try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) {}
-  // نغمة نقرة هادئة ناعمة
+  // اهتزاز خفيف جدًا
+  try { if (navigator.vibrate) navigator.vibrate(5); } catch (e) {}
+  // نقرة ناعمة هادئة جدًا (نغمة منخفضة مكتومة)
   try {
     if (!_audioCtx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; _audioCtx = new AC(); }
     if (_audioCtx.state === "suspended") _audioCtx.resume();
@@ -511,14 +511,18 @@ function playClick() {
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(880, now);
-    osc.frequency.exponentialRampToValueAtTime(660, now + 0.06);
+    const filter = ctx.createBiquadFilter();
+    // فلتر تمرير منخفض يخفّف الحدّة ويعطي نعومة
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(1200, now);
+    osc.type = "triangle";               // موجة أنعم من sine الحادة
+    osc.frequency.setValueAtTime(320, now);   // نغمة منخفضة هادئة
+    osc.frequency.exponentialRampToValueAtTime(220, now + 0.05);
     gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.05, now + 0.008); // هادئ جدًا
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
-    osc.connect(gain); gain.connect(ctx.destination);
-    osc.start(now); osc.stop(now + 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.022, now + 0.012); // خافت جدًا
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.11); // تلاشي ناعم
+    osc.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+    osc.start(now); osc.stop(now + 0.12);
   } catch (e) {}
 }
 // تشغيل النقرة عند أي ضغط زر في التطبيق (على مستوى المستند)
