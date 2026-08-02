@@ -193,6 +193,10 @@ const T = {
   type_wanted: { ar: "مطلوب", fr: "Recherché", en: "Wanted" },
   type_other: { ar: "أخرى", fr: "Autre", en: "Other" },
   type_other_placeholder: { ar: "اكتب الخيار المطلوب...", fr: "Saisissez votre choix...", en: "Type your option..." },
+  manual_entry: { ar: "تعبئة يدوية", fr: "Saisie manuelle", en: "Manual entry" },
+  manual_entry_ph: { ar: "اكتب ما تريد هنا...", fr: "Écrivez ici...", en: "Type here..." },
+  example: { ar: "مثال", fr: "ex", en: "e.g." },
+  back_to_list: { ar: "العودة للقائمة", fr: "Retour à la liste", en: "Back to list" },
 
   // ---- notifications ----
   notifications: { ar: "الإشعارات", fr: "Notifications", en: "Notifications" },
@@ -1670,49 +1674,21 @@ function StepDots({ step }) {
 function DynamicField({ field, value, onChange }) {
   const { t, lang } = useT();
   const base = { border: `1px solid ${C.border}`, color: C.white, background: "transparent" };
-  const OTHER = ["أخرى", "Autre", "Other"];
-  // هل القيمة الحالية قيمة حرة (ليست من الخيارات)؟
-  const isCustom = field.type === "select" && value && !field.options.includes(value);
-  const [otherMode, setOtherMode] = React.useState(isCustom);
+  // كل الخانات تعبئة يدوية حرة (بدون قوائم)
+  const hint = field.type === "select" && field.options && field.options.length
+    ? field.options.filter((o) => !["أخرى", "Autre", "Other"].includes(o)).slice(0, 3).join("، ")
+    : "";
   return (
     <div>
       <label className="text-xs mb-1 block" style={{ color: C.gray }}>{fieldLabel(field.key, lang)}</label>
-      {field.type === "select" ? (
-        <>
-          <select
-            value={otherMode ? "__other__" : (value || "")}
-            onChange={(e) => {
-              const v = e.target.value;
-              if (v === "__other__" || OTHER.includes(v)) { setOtherMode(true); onChange(""); }
-              else { setOtherMode(false); onChange(v); }
-            }}
-            className="w-full rounded-xl px-3 py-2.5 text-sm outline-none text-right"
-            style={base}
-          >
-            <option value="" style={{ background: C.card }}>{t("choose")}</option>
-            {field.options.filter((o) => !OTHER.includes(o)).map((o) => <option key={o} value={o} style={{ background: C.card }}>{o}</option>)}
-            <option value="__other__" style={{ background: C.card }}>{t("type_other")}</option>
-          </select>
-          {otherMode && (
-            <input
-              value={value || ""}
-              onChange={(e) => onChange(e.target.value)}
-              placeholder={t("type_other_placeholder")}
-              className="w-full mt-2 rounded-xl px-3 py-2.5 text-sm outline-none text-right"
-              style={base}
-            />
-          )}
-        </>
-      ) : (
-        <input
-          value={value || ""}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={field.placeholder}
-          inputMode={field.type === "number" ? "numeric" : "text"}
-          className="w-full rounded-xl px-3 py-2.5 text-sm outline-none text-right"
-          style={base}
-        />
-      )}
+      <input
+        value={value || ""}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={field.placeholder || (hint ? `${t("example")}: ${hint}` : t("manual_entry_ph"))}
+        inputMode={field.type === "number" ? "numeric" : "text"}
+        className="w-full rounded-xl px-3 py-2.5 text-sm outline-none text-right"
+        style={base}
+      />
     </div>
   );
 }
@@ -2791,6 +2767,15 @@ function MauriOneInner() {
   const toggleFav = (id) => setFavorites((prev) => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
   const openAd = async (ad) => {
     setSelectedAd({ ...ad, views: (ad.views || 0) + 1 });
+    // قفل الشاشات الأخرى عشان تظهر تفاصيل الإعلان
+    setShowMyAds(false);
+    setShowFavorites(false);
+    setShowNotifs(false);
+    setShowStats(false);
+    setShowReviews(false);
+    setShowSettings(false);
+    setShowHelp(false);
+    setShowPlans(false);
     try { await updateDoc(doc(db, "ads", ad.id), { views: increment(1) }); } catch (e) {}
   };
   const goSearch = (catId) => { setSearchCat(catId || "all"); setTab("search"); };
