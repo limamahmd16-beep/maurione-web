@@ -1356,10 +1356,13 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
           <div className="rounded-xl p-3 mb-4" style={{ background: C.card, border: `1px solid ${C.border}` }}>
             <p className="text-sm font-bold mb-3" style={{ color: C.white }}>{t("specifications")}</p>
             <div className="grid grid-cols-3 gap-y-3">
-              {ad.specs.map(([k, v, iconRef]) => {
+              {ad.specs.map((sp, i) => {
+                const k = Array.isArray(sp) ? sp[0] : sp.label;
+                const v = Array.isArray(sp) ? sp[1] : sp.value;
+                const iconRef = Array.isArray(sp) ? sp[2] : sp.icon;
                 const SpecIcon = typeof iconRef === "function" ? iconRef : (SPEC_ICON[iconRef] || ClipboardList);
                 return (
-                  <div key={k} className="flex flex-col items-center text-center gap-1">
+                  <div key={i} className="flex flex-col items-center text-center gap-1">
                     <SpecIcon size={16} color={C.green} />
                     <p className="text-[11px]" style={{ color: C.grayDim }}>{k}</p>
                     <p className="text-xs font-medium" style={{ color: C.white }}>{v}</p>
@@ -2554,7 +2557,7 @@ function MauriOneInner() {
     const fieldDefs = CATEGORY_FIELDS[form.cat] || [];
     const specsArr = fieldDefs
       .filter((f) => form.specs[f.key])
-      .map((f) => [fieldLabel(f.key, lang), form.specs[f.key], f.key]); // icon stored as key (serializable)
+      .map((f) => ({ label: fieldLabel(f.key, lang), value: form.specs[f.key], icon: f.key })); // objects (Firestore-safe)
     const nowLabel = lang === "fr" ? "maintenant" : lang === "en" ? "now" : "الآن";
     const newAd = {
       cat: form.cat, title: form.title, price: form.price, currency: t("currency"),
