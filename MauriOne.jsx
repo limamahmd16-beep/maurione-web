@@ -502,27 +502,35 @@ function isSoundEnabled() { return _soundOn; }
 function playClick() {
   if (!_soundOn) return;
   // اهتزاز خفيف جدًا
-  try { if (navigator.vibrate) navigator.vibrate(5); } catch (e) {}
-  // نقرة ناعمة هادئة جدًا (نغمة منخفضة مكتومة)
+  try { if (navigator.vibrate) navigator.vibrate(4); } catch (e) {}
+  // نقرة جافة قصيرة مثل لوحة مفاتيح آبل (نبضة ضجيج مفلترة)
   try {
     if (!_audioCtx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; _audioCtx = new AC(); }
     if (_audioCtx.state === "suspended") _audioCtx.resume();
     const ctx = _audioCtx;
     const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
+    const dur = 0.028; // قصيرة جدًا = إحساس النقرة الجافة
+    // توليد ضجيج أبيض قصير
+    const frames = Math.floor(ctx.sampleRate * dur);
+    const buffer = ctx.createBuffer(1, frames, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < frames; i++) {
+      // انحدار سريع يعطي طقّة "tok"
+      const decay = Math.pow(1 - i / frames, 3);
+      data[i] = (Math.random() * 2 - 1) * decay;
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    // فلتر تمرير نطاقي يعطي نبرة النقرة اللطيفة
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.value = 2600;
+    bp.Q.value = 0.7;
     const gain = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
-    // فلتر تمرير منخفض يخفّف الحدّة ويعطي نعومة
-    filter.type = "lowpass";
-    filter.frequency.setValueAtTime(1200, now);
-    osc.type = "triangle";               // موجة أنعم من sine الحادة
-    osc.frequency.setValueAtTime(320, now);   // نغمة منخفضة هادئة
-    osc.frequency.exponentialRampToValueAtTime(220, now + 0.05);
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.022, now + 0.012); // خافت جدًا
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.11); // تلاشي ناعم
-    osc.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
-    osc.start(now); osc.stop(now + 0.12);
+    gain.gain.setValueAtTime(0.22, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+    src.connect(bp); bp.connect(gain); gain.connect(ctx.destination);
+    src.start(now); src.stop(now + dur + 0.01);
   } catch (e) {}
 }
 // تشغيل النقرة عند أي ضغط زر في التطبيق (على مستوى المستند)
