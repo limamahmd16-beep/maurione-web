@@ -196,6 +196,10 @@ const T = {
   manual_entry: { ar: "تعبئة يدوية", fr: "Saisie manuelle", en: "Manual entry" },
   manual_entry_ph: { ar: "اكتب ما تريد هنا...", fr: "Écrivez ici...", en: "Type here..." },
   example: { ar: "مثال", fr: "ex", en: "e.g." },
+  no_messages: { ar: "لا توجد رسائل بعد", fr: "Aucun message", en: "No messages yet" },
+  no_messages_sub: { ar: "ستظهر محادثاتك مع البائعين والمشترين هنا", fr: "Vos conversations apparaîtront ici", en: "Your conversations will appear here" },
+  no_notifications: { ar: "لا توجد إشعارات", fr: "Aucune notification", en: "No notifications" },
+  no_notifications_sub: { ar: "ستظهر تنبيهاتك هنا عند وصولها", fr: "Vos alertes apparaîtront ici", en: "Your alerts will appear here" },
   back_to_list: { ar: "العودة للقائمة", fr: "Retour à la liste", en: "Back to list" },
 
   // ---- notifications ----
@@ -287,6 +291,13 @@ const T = {
   settings_account: { ar: "الحساب", fr: "Compte", en: "Account" },
   settings_privacy: { ar: "الخصوصية والأمان", fr: "Confidentialité", en: "Privacy & security" },
   settings_about: { ar: "عن التطبيق", fr: "À propos", en: "About" },
+  about_tagline: { ar: "منصّة الإعلانات الأولى في موريتانيا", fr: "La 1ère plateforme d'annonces en Mauritanie", en: "Mauritania's #1 classifieds platform" },
+  about_desc: { ar: "تطبيق موريتاني متكامل يجمع كل ما تحتاجه في مكان واحد: الوظائف، السيارات، العقارات، العيادات، الهواتف، والخدمات المنزلية. صُمّم ليكون سهلاً وسريعاً وآمناً، ويخدم المجتمع الموريتاني بواجهة عصرية تدعم ثلاث لغات.", fr: "Une application mauritanienne complète qui réunit tout ce dont vous avez besoin : emplois, voitures, immobilier, cliniques, téléphones et services à domicile.", en: "A complete Mauritanian app bringing together everything you need: jobs, cars, real estate, clinics, phones, and home services. Built to be simple, fast, and secure." },
+  about_developer: { ar: "المطوّر والمؤسس", fr: "Développeur & Fondateur", en: "Developer & Founder" },
+  about_dev_bio: { ar: "مطوّر ورائد أعمال موريتاني، شغوف بالتقنية وبناء حلول رقمية تخدم مجتمعه. أسّس MauriOne برؤية جعل التجارة والخدمات في متناول كل موريتاني.", fr: "Développeur et entrepreneur mauritanien, passionné par la technologie et les solutions numériques au service de sa communauté.", en: "Mauritanian developer and entrepreneur, passionate about technology and building digital solutions that serve his community." },
+  about_contact: { ar: "للتواصل", fr: "Contact", en: "Contact" },
+  about_made: { ar: "صُنع بكل فخر في موريتانيا", fr: "Fait avec fierté en Mauritanie", en: "Made with pride in Mauritania" },
+  about_rights: { ar: "جميع الحقوق محفوظة", fr: "Tous droits réservés", en: "All rights reserved" },
   settings_version: { ar: "الإصدار", fr: "Version", en: "Version" },
   theme_dark: { ar: "داكن", fr: "Sombre", en: "Dark" },
   theme_light: { ar: "فاتح", fr: "Clair", en: "Light" },
@@ -753,16 +764,28 @@ function AdCard({ ad, isFav, onToggleFav, onOpen, variant = "grid" }) {
 // ---------- language switcher ----------
 function LangSwitch({ style, className }) {
   const { lang, setLang, t } = useT();
+  const [open, setOpen] = useState(false);
   const order = ["ar", "fr", "en"];
-  const cycle = () => {
-    const next = order[(order.indexOf(lang) + 1) % order.length];
-    setLang(next);
-    toast(t("lang_changed") + " → " + LANGS[next].label);
-  };
+  const choose = (code) => { setLang(code); setOpen(false); toast(t("lang_changed") + " → " + LANGS[code].label); };
   return (
-    <button onClick={cycle} className={className || "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm"} style={style}>
-      <Globe size={14} /> {LANGS[lang].label} <ChevronDown size={13} />
-    </button>
+    <div className="relative" style={{ zIndex: 60 }}>
+      <button onClick={() => setOpen((v) => !v)} className={className || "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm"} style={style}>
+        <Globe size={14} /> {LANGS[lang].label} <ChevronDown size={13} style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform .2s" }} />
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0" style={{ zIndex: 55 }} onClick={() => setOpen(false)} />
+          <div className="absolute mt-2 rounded-xl overflow-hidden" style={{ top: "100%", insetInlineStart: 0, minWidth: 150, background: D.card, border: `1px solid ${D.border}`, zIndex: 60, boxShadow: "0 10px 30px rgba(0,0,0,0.4)" }}>
+            {order.map((code) => (
+              <button key={code} onClick={() => choose(code)} className="w-full flex items-center justify-between gap-2 px-3 py-2.5 text-sm" style={{ background: lang === code ? hexToRgba("#19C98A", 0.12) : "transparent", color: D.white }}>
+                <span className="flex items-center gap-2"><span className="text-[11px] font-bold" style={{ color: D.gray }}>{LANGS[code].flag}</span> {LANGS[code].label}</span>
+                {lang === code && <Check size={14} color="#19C98A" />}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 
@@ -2008,16 +2031,7 @@ const NOTIF_TYPES = {
   system: { icon: Bell, color: "#4C8DFF" },
 };
 
-const NOTIFS = [
-  { id: 1, type: "message", title: "رسالة جديدة", body: "أحمد محمد أرسل لك رسالة بخصوص", ref: "تويوتا لاند كروزر 2023", time: "منذ 2 دقيقة", unread: true },
-  { id: 2, type: "like", title: "إعجاب جديد", body: "سارة بنت أحمد أعجبت بإعلانك", ref: "شقة حديثة للبيع في تفرغ زينة", time: "منذ 15 دقيقة", unread: true },
-  { id: 3, type: "save", title: "إضافة إلى المفضلة", body: "عبد الرحمن حفظ إعلانك في المفضلة", ref: "iPhone 14 Pro Max 256GB", time: "منذ 35 دقيقة", unread: true },
-  { id: 4, type: "expiry", title: "انتهاء مدة الإعلان", body: "إعلانك شقة دوبلكس للإيجار ينتهي بعد", ref: "يوم واحد", time: "منذ ساعة", unread: false },
-  { id: 5, type: "approved", title: "تمت الموافقة على إعلانك", body: "تمت الموافقة على إعلانك وسيظهر قريبًا", ref: "وظيفة مندوب مبيعات", time: "منذ ساعتين", unread: false },
-  { id: 6, type: "rejected", title: "تم رفض إعلانك", body: "تم رفض إعلانك لمخالفة سياسة النشر", ref: "سيارة مرسيدس 2010", time: "منذ 3 ساعات", unread: false },
-  { id: 7, type: "offer", title: "عرض سعر جديد", body: "لديك عرض سعر جديد من محمد الأمين على", ref: "أرض للبيع في لكصر", time: "منذ 4 ساعات", unread: false },
-  { id: 8, type: "system", title: "MauriOne", body: "تأكد من تحديث بيانات حسابك للاستمرار في استخدام جميع خدمات التطبيق.", ref: "", time: "منذ يوم", unread: false },
-];
+const NOTIFS = [];
 
 function NotificationsScreen({ onBack }) {
   const { t, lang, setLang, dir } = useT();
@@ -2045,7 +2059,13 @@ function NotificationsScreen({ onBack }) {
         <Chip active={tab === "unread"} onClick={() => setTab("unread")}>{t("unread")} ({unreadCount})</Chip>
       </div>
       <div className="px-4 flex flex-col gap-2">
-        {list.map((n) => {
+        {list.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-16 px-8 text-center">
+            <Bell size={34} color={C.grayDim} />
+            <p className="text-sm font-bold" style={{ color: C.white }}>{t("no_notifications")}</p>
+            <p className="text-xs" style={{ color: C.grayDim }}>{t("no_notifications_sub")}</p>
+          </div>
+        ) : list.map((n) => {
           const meta = NOTIF_TYPES[n.type];
           return (
             <button key={n.id} onClick={() => markOne(n.id)} className="w-full text-right flex items-center gap-3 rounded-xl p-3" style={{ background: C.card, border: `1px solid ${n.unread ? hexToRgba(C.green, 0.35) : C.border}` }}>
@@ -2067,13 +2087,7 @@ function NotificationsScreen({ onBack }) {
 }
 
 // ---------- Messages ----------
-const MOCK_CHATS = [
-  { id: 1, name: "محمد أحمد", role: "بائع", verified: true, ref: "iPhone 14 Pro Max 256GB", last: "مرحبًا، هل الهاتف ما زال متوفرًا؟", time: "09:40 ص", unread: 2 },
-  { id: 2, name: "سارة بنت أحمد", role: "مشتري", verified: true, ref: "شقة حديثة للبيع", last: "شكرًا على الرد، هل يمكن تحديد موعد للمعاينة؟", time: "أمس", unread: 1 },
-  { id: 3, name: "أحمد سالم", role: "مشتري", verified: false, ref: "تويوتا لاند كروزر 2023", last: "حسنًا، سأرسل لك العنوان", time: "أمس", unread: 0 },
-  { id: 4, name: "مكتب دار الأمل العقارية", role: "بائع", verified: true, ref: "فيلا فاخرة للبيع", last: "مرحبًا، يسعدنا خدمتكم", time: "2 مايو", unread: 3 },
-  { id: 5, name: "فاطمة محمد", role: "مشتري", verified: false, ref: "Samsung Galaxy S24 Ultra", last: "هل يوجد ضمان على الجهاز؟", time: "1 مايو", unread: 0 },
-];
+const MOCK_CHATS = [];
 
 function MessagesScreen({ onBack }) {
   const { t, lang, setLang, dir } = useT();
@@ -2128,7 +2142,13 @@ function MessagesScreen({ onBack }) {
         <Chip active={tab === "archive"} onClick={() => setTab("archive")}>{t("archive")}</Chip>
       </div>
       <div className="px-2 mt-2">
-        {MOCK_CHATS.filter((c) => tab !== "unread" || c.unread).map((c) => (
+        {MOCK_CHATS.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 py-16 px-8 text-center">
+            <MessageCircle size={34} color={C.grayDim} />
+            <p className="text-sm font-bold" style={{ color: C.white }}>{t("no_messages")}</p>
+            <p className="text-xs" style={{ color: C.grayDim }}>{t("no_messages_sub")}</p>
+          </div>
+        ) : MOCK_CHATS.filter((c) => tab !== "unread" || c.unread).map((c) => (
           <button key={c.id} onClick={() => setOpenChat(c)} className="w-full flex items-center gap-3 px-2 py-3" style={{ borderBottom: `1px solid ${C.border}` }}>
             <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0" style={{ background: C.card }}><User size={18} color={C.gray} /></div>
             <div className="flex-1 text-right min-w-0">
@@ -2219,6 +2239,52 @@ function MyAdsScreen({ ads, favorites, onToggleFav, onOpenAd, onBack, onDelete, 
   );
 }
 
+function AboutScreen({ onBack }) {
+  const { t } = useT();
+  return (
+    <div className="pb-8">
+      <TopBar onBack={onBack} title={t("settings_about")} />
+      <div className="px-4 pt-2">
+        {/* شعار واسم التطبيق */}
+        <div className="flex flex-col items-center text-center py-4">
+          <div className="mb-3"><Logo size={54} markColor="#FFFFFF" /></div>
+          <h1 className="text-2xl font-black" style={{ color: C.white }}>MauriOne</h1>
+          <p className="text-xs mt-1" style={{ color: C.green }}>{t("about_tagline")}</p>
+          <p className="text-[11px] mt-1" style={{ color: C.grayDim }}>{t("settings_version")} 1.0.0</p>
+        </div>
+
+        <p className="text-sm leading-relaxed text-center px-1 mb-5" style={{ color: C.gray }}>{t("about_desc")}</p>
+
+        <div className="h-px my-4" style={{ background: C.border }} />
+
+        {/* المطوّر */}
+        <div className="rounded-2xl p-5 flex flex-col items-center text-center" style={{ background: C.card, border: `1px solid ${C.border}` }}>
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mb-3" style={{ background: `linear-gradient(145deg, ${C.green}, ${C.greenDim})` }}>
+            <span className="text-2xl font-black" style={{ color: "#07130E" }}>L</span>
+          </div>
+          <p className="text-[11px] font-bold mb-1" style={{ color: C.green }}>{t("about_developer")}</p>
+          <h2 className="text-lg font-black mb-2" style={{ color: C.white }}>LIMAM AHMED AMAR</h2>
+          <p className="text-xs leading-relaxed mb-4" style={{ color: C.gray }}>{t("about_dev_bio")}</p>
+
+          <div className="w-full flex flex-col gap-2">
+            <a href="mailto:limamahmd16@gmail.com" className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold" style={{ background: hexToRgba(C.blue, 0.12), color: C.blue, border: `1px solid ${hexToRgba(C.blue, 0.4)}` }}>
+              <Mail size={15} /> limamahmd16@gmail.com
+            </a>
+            <a href="https://wa.me/222943185060" target="_blank" rel="noreferrer" className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold" style={{ background: hexToRgba("#22C55E", 0.12), color: "#22C55E", border: `1px solid ${hexToRgba("#22C55E", 0.4)}` }}>
+              <Send size={15} /> +222 943185060
+            </a>
+          </div>
+        </div>
+
+        <div className="text-center mt-6">
+          <p className="text-xs" style={{ color: C.gray }}>{t("about_made")} 🇲🇷</p>
+          <p className="text-[11px] mt-1" style={{ color: C.grayDim }}>© 2026 MauriOne — {t("about_rights")}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function HelpScreen({ onBack }) {
   const { t } = useT();
   const faqs = [
@@ -2251,11 +2317,11 @@ function HelpScreen({ onBack }) {
   );
 }
 
-function SettingsScreen({ onBack, onLogout, onOpenHelp }) {
+function SettingsScreen({ onBack, onLogout, onOpenHelp, onOpenAbout }) {
   const { t, lang, theme, toggleTheme, setLang } = useT();
   const [push, setPush] = useState(true);
+  const [langOpen, setLangOpen] = useState(false);
   const langOrder = ["ar", "fr", "en"];
-  const cycleLang = () => setLang(langOrder[(langOrder.indexOf(lang) + 1) % langOrder.length]);
 
   const Section = ({ title, children }) => (
     <div className="mb-4">
@@ -2283,7 +2349,7 @@ function SettingsScreen({ onBack, onLogout, onOpenHelp }) {
       <div className="px-4 pt-2">
         <Section title={t("settings_appearance")}>
           <Row icon={theme === "dark" ? Moon : Sun} label={t("settings_theme_row")} value={theme === "dark" ? t("theme_dark") : t("theme_light")} onClick={toggleTheme} right={<Toggle on={theme === "dark"} onChange={toggleTheme} />} />
-          <Row icon={Globe} label={t("settings_language")} value={LANGS[lang].label} onClick={cycleLang} last />
+          <Row icon={Globe} label={t("settings_language")} value={LANGS[lang].label} onClick={() => setLangOpen(true)} last />
         </Section>
 
         <Section title={t("settings_notifications")}>
@@ -2297,7 +2363,7 @@ function SettingsScreen({ onBack, onLogout, onOpenHelp }) {
         </Section>
 
         <Section title={t("settings_about")}>
-          <Row icon={Star} label={t("settings_about")} onClick={() => toast("MauriOne")} />
+          <Row icon={Star} label={t("settings_about")} onClick={onOpenAbout} />
           <Row icon={ClipboardList} label={t("settings_version")} value="1.0.0" onClick={() => {}} last />
         </Section>
 
@@ -2305,6 +2371,22 @@ function SettingsScreen({ onBack, onLogout, onOpenHelp }) {
           <LogOut size={15} /> {t("logout")}
         </button>
       </div>
+
+      {langOpen && (
+        <div className="fixed inset-0 z-[70] flex items-end justify-center" style={{ background: "rgba(0,0,0,0.6)" }} onClick={() => setLangOpen(false)}>
+          <div onClick={(e) => e.stopPropagation()} className="w-full rounded-t-3xl p-5 flex flex-col gap-2" style={{ maxWidth: 420, background: C.bg, borderTop: `1px solid ${C.border}` }}>
+            <div className="w-10 h-1 rounded-full mx-auto mb-2" style={{ background: C.border }} />
+            <p className="text-base font-bold text-center mb-2" style={{ color: C.white }}>{t("settings_language")}</p>
+            {langOrder.map((code) => (
+              <button key={code} onClick={() => { setLang(code); setLangOpen(false); }} className="w-full flex items-center justify-between px-4 py-3 rounded-xl" style={{ background: lang === code ? hexToRgba(C.green, 0.12) : C.card, border: `1px solid ${lang === code ? C.green : C.border}` }}>
+                <span className="text-sm font-medium" style={{ color: C.white }}>{LANGS[code].flag} {LANGS[code].label}</span>
+                {lang === code && <Check size={16} color={C.green} />}
+              </button>
+            ))}
+            <button onClick={() => setLangOpen(false)} className="w-full py-3 rounded-xl text-sm font-bold mt-1" style={{ border: `1px solid ${C.border}`, color: C.white }}>{t("cancel")}</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -2542,7 +2624,7 @@ function ProfileScreen({ profile, setProfile, myAdsCount, totalViews, onOpenFavo
     { label: t("stat_views"), value: totalViews, icon: Eye },
     { label: t("stat_favorites"), value: favCount, icon: Heart },
     { label: t("stat_ads"), value: myAdsCount, icon: ClipboardList },
-    { label: t("stat_followers"), value: 218, icon: User },
+    { label: t("stat_followers"), value: 0, icon: User },
   ];
   const quick = [
     { label: t("messages"), value: msgCount, icon: MessageCircle, onClick: onOpenMessages },
@@ -2684,9 +2766,10 @@ function MauriOneInner() {
   const [showPlans, setShowPlans] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const [profile, setProfile] = useState(() => {
     const saved = Store.get(PROFILE_KEY, null);
-    return saved || { name: "محمد الأمين", username: "mohamed_amine", bio: "", city: "نواكشوط", avatar: null, joinedYear: new Date().getFullYear() };
+    return saved || { name: "زائر", username: "guest", bio: "", city: "نواكشوط", avatar: null, joinedYear: new Date().getFullYear() };
   });
   useEffect(() => { Store.set(PROFILE_KEY, profile); }, [profile]);
 
@@ -2866,12 +2949,14 @@ function MauriOneInner() {
     body = <StatsScreen ads={ads} onBack={() => setShowStats(false)} onOpenAd={openAd} />;
   } else if (showPlans) {
     body = <PlansScreen onBack={() => setShowPlans(false)} />;
+  } else if (showAbout) {
+    body = <AboutScreen onBack={() => setShowAbout(false)} />;
   } else if (showHelp) {
     body = <HelpScreen onBack={() => setShowHelp(false)} />;
   } else if (showReviews) {
     body = <ReviewsScreen onBack={() => setShowReviews(false)} />;
   } else if (showSettings) {
-    body = <SettingsScreen onOpenHelp={() => { setShowSettings(false); setShowHelp(true); }} onBack={() => setShowSettings(false)} onLogout={() => { handleSignOut(); setShowSettings(false); setShowNotifs(false); setShowFavorites(false); setShowMyAds(false); setSelectedAd(null); setTab("home"); setPhase("onboarding"); }} />;
+    body = <SettingsScreen onOpenAbout={() => { setShowSettings(false); setShowAbout(true); }} onOpenHelp={() => { setShowSettings(false); setShowHelp(true); }} onBack={() => setShowSettings(false)} onLogout={() => { handleSignOut(); setShowSettings(false); setShowNotifs(false); setShowFavorites(false); setShowMyAds(false); setSelectedAd(null); setTab("home"); setPhase("onboarding"); }} />;
   } else if (showMyAds) {
     body = <MyAdsScreen ads={ads} favorites={favorites} onToggleFav={toggleFav} onOpenAd={openAd} onBack={() => setShowMyAds(false)} onDelete={deleteAd} onClearAll={clearAllAds} onRestore={restoreSeed} />;
   } else if (showFavorites) {
@@ -2890,7 +2975,7 @@ function MauriOneInner() {
     body = <ProfileScreen profile={profile} setProfile={setProfile} myAdsCount={myAdsCount} totalViews={totalViews} onOpenFavorites={() => setShowFavorites(true)} onOpenMyAds={() => setShowMyAds(true)} onOpenSettings={() => setShowSettings(true)} onOpenStats={() => setShowStats(true)} onOpenPlans={() => setShowPlans(true)} onOpenReviews={() => setShowReviews(true)} onOpenHelp={() => setShowHelp(true)} favCount={favorites.size} msgCount={unreadMsgs} notifCount={unreadNotifs} onLogout={() => { handleSignOut(); setShowNotifs(false); setShowFavorites(false); setShowMyAds(false); setSelectedAd(null); setTab("home"); setPhase("onboarding"); }} onOpenNotifs={() => setShowNotifs(true)} onOpenMessages={() => setTab("messages")} />;
   }
 
-  const hideNav = !!selectedAd || showNotifs || showFavorites || showMyAds || showSettings || showStats || showPlans || showReviews || showHelp || tab === "add";
+  const hideNav = !!selectedAd || showNotifs || showFavorites || showMyAds || showSettings || showStats || showPlans || showReviews || showHelp || showAbout || tab === "add";
 
   return (
     <div dir={dir} className="w-full flex justify-center" style={{ background: "#000", minHeight: "100vh", fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif" }}>
