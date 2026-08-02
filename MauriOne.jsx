@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef, createContext, useContext } from "react";
 import { db } from "./firebase.js";
 import { auth } from "./firebase.js";
-import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, updateDoc, increment, serverTimestamp } from "firebase/firestore";
 
 // ===== Cloudinary: رفع الصور للسحابة =====
@@ -201,6 +201,10 @@ const T = {
   no_notifications: { ar: "لا توجد إشعارات", fr: "Aucune notification", en: "No notifications" },
   no_notifications_sub: { ar: "ستظهر تنبيهاتك هنا عند وصولها", fr: "Vos alertes apparaîtront ici", en: "Your alerts will appear here" },
   your_number: { ar: "رقمك", fr: "votre numéro", en: "your number" },
+  email_only: { ar: "البريد الإلكتروني", fr: "E-mail", en: "Email" },
+  enter_name: { ar: "يرجى إدخال اسمك", fr: "Entrez votre nom", en: "Please enter your name" },
+  pw_mismatch: { ar: "كلمتا المرور غير متطابقتين", fr: "Les mots de passe ne correspondent pas", en: "Passwords don't match" },
+  must_agree: { ar: "يجب الموافقة على الشروط", fr: "Vous devez accepter les conditions", en: "You must agree to the terms" },
   back_to_list: { ar: "العودة للقائمة", fr: "Retour à la liste", en: "Back to list" },
 
   // ---- notifications ----
@@ -979,7 +983,7 @@ function AuthShell({ children, onBack }) {
   );
 }
 
-function LoginScreen({ onLogin, onGoSignup, onBack, onGoogle }) {
+function LoginScreen({ onEmailLogin, onGoSignup, onBack, onGoogle }) {
   const { t, lang, setLang, dir } = useT();
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
@@ -990,10 +994,10 @@ function LoginScreen({ onLogin, onGoSignup, onBack, onGoogle }) {
         {t("login_subtitle")} <span style={{ color: D.green }}>MauriOne</span>
       </p>
       <div className="flex flex-col gap-3">
-        <Field icon={User} value={id} onChange={setId} placeholder={t("phone_or_email")} />
+        <Field icon={User} value={id} onChange={setId} placeholder={t("email_only")} type="email" />
         <Field icon={Lock} value={pw} onChange={setPw} placeholder={t("password")} type="password" />
         <button onClick={() => toast(t("reset_password_sent"))} className="text-sm text-left" style={{ color: D.green }}>{t("forgot_password")}</button>
-        <button onClick={() => onLogin(id)} className="w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-1" style={{ background: D.green, color: "#07130E" }}>
+        <button onClick={() => onEmailLogin(id, pw)} className="w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-1" style={{ background: D.green, color: "#07130E" }}>
           {t("login")} <ArrowLeft size={16} />
         </button>
         <div className="flex items-center gap-3 my-1">
@@ -1011,7 +1015,7 @@ function LoginScreen({ onLogin, onGoSignup, onBack, onGoogle }) {
   );
 }
 
-function SignupScreen({ onSignup, onGoLogin, onBack, onGoogle }) {
+function SignupScreen({ onEmailSignup, onGoLogin, onBack, onGoogle }) {
   const { t, lang, setLang, dir } = useT();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -1019,6 +1023,12 @@ function SignupScreen({ onSignup, onGoLogin, onBack, onGoogle }) {
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
   const [agree, setAgree] = useState(false);
+  const submit = () => {
+    if (!name.trim()) { toast(t("enter_name")); return; }
+    if (pw !== pw2) { toast(t("pw_mismatch")); return; }
+    if (!agree) { toast(t("must_agree")); return; }
+    onEmailSignup(name.trim(), email, pw);
+  };
   return (
     <AuthShell onBack={onBack}>
       <h2 className="text-xl font-bold text-center mb-1" style={{ color: D.white }}>{t("create_account_title")}</h2>
@@ -1027,7 +1037,7 @@ function SignupScreen({ onSignup, onGoLogin, onBack, onGoogle }) {
       </p>
       <div className="flex flex-col gap-3">
         <Field icon={User} value={name} onChange={setName} placeholder={t("full_name")} />
-        <Field icon={Mail} value={email} onChange={setEmail} placeholder={t("email")} />
+        <Field icon={Mail} value={email} onChange={setEmail} placeholder={t("email")} type="email" />
         <Field icon={Phone} value={phone} onChange={setPhone} placeholder={t("phone_optional")} />
         <Field icon={Lock} value={pw} onChange={setPw} placeholder={t("password")} type="password" />
         <Field icon={Lock} value={pw2} onChange={setPw2} placeholder={t("confirm_password")} type="password" />
@@ -1037,7 +1047,7 @@ function SignupScreen({ onSignup, onGoLogin, onBack, onGoogle }) {
             {agree && <Check size={11} color="#07130E" />}
           </span>
         </button>
-        <button onClick={() => onSignup(phone)} className="w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-1" style={{ background: D.green, color: "#07130E" }}>
+        <button onClick={submit} className="w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-1" style={{ background: D.green, color: "#07130E" }}>
           {t("create_account")} <ArrowLeft size={16} />
         </button>
         <div className="flex items-center gap-3 my-1">
@@ -2821,6 +2831,51 @@ function MauriOneInner() {
     }
   };
 
+  // ترجمة أخطاء Firebase الشائعة للعربية
+  const authErrorAr = (code) => {
+    const m = {
+      "auth/invalid-email": "البريد الإلكتروني غير صحيح",
+      "auth/email-already-in-use": "هذا البريد مسجّل مسبقًا، سجّل الدخول",
+      "auth/weak-password": "كلمة المرور ضعيفة (6 أحرف على الأقل)",
+      "auth/missing-password": "يرجى إدخال كلمة المرور",
+      "auth/wrong-password": "كلمة المرور غير صحيحة",
+      "auth/user-not-found": "لا يوجد حساب بهذا البريد",
+      "auth/invalid-credential": "البريد أو كلمة المرور غير صحيحة",
+      "auth/too-many-requests": "محاولات كثيرة، حاول لاحقًا",
+      "auth/network-request-failed": "تحقّق من اتصالك بالإنترنت",
+    };
+    return m[code] || "تعذّرت العملية، حاول مجددًا";
+  };
+
+  // إنشاء حساب بالبريد + كلمة المرور
+  const handleEmailSignUp = async (name, email, password) => {
+    const em = (email || "").trim();
+    if (!em || !/\S+@\S+\.\S+/.test(em)) { toast("أدخل بريدًا صحيحًا"); return; }
+    if (!password || password.length < 6) { toast("كلمة المرور 6 أحرف على الأقل"); return; }
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, em, password);
+      if (name && cred.user) { try { await updateProfile(cred.user, { displayName: name }); } catch (e) {} }
+      setPhase("app");
+    } catch (e) {
+      console.error(e);
+      toast(authErrorAr(e.code));
+    }
+  };
+
+  // تسجيل الدخول بالبريد + كلمة المرور
+  const handleEmailSignIn = async (email, password) => {
+    const em = (email || "").trim();
+    if (!em || !/\S+@\S+\.\S+/.test(em)) { toast("أدخل بريدك الإلكتروني"); return; }
+    if (!password) { toast("أدخل كلمة المرور"); return; }
+    try {
+      await signInWithEmailAndPassword(auth, em, password);
+      setPhase("app");
+    } catch (e) {
+      console.error(e);
+      toast(authErrorAr(e.code));
+    }
+  };
+
   // تسجيل الخروج
   const handleSignOut = async () => {
     try { await signOut(auth); } catch (e) {}
@@ -2921,7 +2976,7 @@ function MauriOneInner() {
     <div dir={dir} className="w-full flex justify-center" style={{ background: "#000", minHeight: "100vh", fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif" }}>
       <div className="w-full mo-frame" style={{ minHeight: "100vh", background: C.bg }}>
         <ToastHost />
-        <LoginScreen onLogin={(id) => { setAuthContact(id || ""); setPhase("otp"); }} onGoSignup={() => setPhase("signup")} onBack={() => setPhase("onboarding")} onGoogle={handleGoogleSignIn} />
+        <LoginScreen onEmailLogin={handleEmailSignIn} onGoSignup={() => setPhase("signup")} onBack={() => setPhase("onboarding")} onGoogle={handleGoogleSignIn} />
       </div>
     </div>
   );
@@ -2930,7 +2985,7 @@ function MauriOneInner() {
     <div dir={dir} className="w-full flex justify-center" style={{ background: "#000", minHeight: "100vh", fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif" }}>
       <div className="w-full mo-frame" style={{ minHeight: "100vh", background: C.bg }}>
         <ToastHost />
-        <SignupScreen onSignup={(ph) => { setAuthContact(ph || ""); setPhase("otp"); }} onGoLogin={() => setPhase("login")} onBack={() => setPhase("onboarding")} onGoogle={handleGoogleSignIn} />
+        <SignupScreen onEmailSignup={handleEmailSignUp} onGoLogin={() => setPhase("login")} onBack={() => setPhase("onboarding")} onGoogle={handleGoogleSignIn} />
       </div>
     </div>
   );
@@ -2982,8 +3037,8 @@ function MauriOneInner() {
   return (
     <div dir={dir} className="w-full flex justify-center" style={{ background: "#000", minHeight: "100vh", fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif" }}>
       <style>{`
-        .mo-frame { max-width: 420px; }
-        .mo-nav { max-width: 420px; }
+        .mo-frame { max-width: 420px; padding-top: env(safe-area-inset-top); }
+        .mo-nav { max-width: 420px; padding-bottom: env(safe-area-inset-bottom); }
         @media (min-width: 700px) {
           .mo-frame { max-width: 720px; }
           .mo-nav { max-width: 720px; }
