@@ -293,6 +293,7 @@ const T = {
   settings_language: { ar: "اللغة", fr: "Langue", en: "Language" },
   settings_notifications: { ar: "الإشعارات", fr: "Notifications", en: "Notifications" },
   settings_push: { ar: "تفعيل الإشعارات", fr: "Activer les notifications", en: "Enable notifications" },
+  settings_sound: { ar: "أصوات النقر", fr: "Sons de clic", en: "Click sounds" },
   settings_account: { ar: "الحساب", fr: "Compte", en: "Account" },
   settings_privacy: { ar: "الخصوصية والأمان", fr: "Confidentialité", en: "Privacy & security" },
   settings_about: { ar: "عن التطبيق", fr: "À propos", en: "About" },
@@ -492,6 +493,42 @@ const Store = {
 };
 const ADS_KEY = "maurione_ads_v2";
 const PROFILE_KEY = "maurione_profile_v1";
+
+// ===== نظام صوت النقرات الهادئ + الاهتزاز =====
+let _audioCtx = null;
+let _soundOn = (() => { try { const v = window.localStorage.getItem("maurione_sound"); return v == null ? true : v === "1"; } catch (e) { return true; } })();
+function setSoundEnabled(on) { _soundOn = on; try { window.localStorage.setItem("maurione_sound", on ? "1" : "0"); } catch (e) {} }
+function isSoundEnabled() { return _soundOn; }
+function playClick() {
+  if (!_soundOn) return;
+  // اهتزاز خفيف (يعمل على أغلب أجهزة أندرويد)
+  try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) {}
+  // نغمة نقرة هادئة ناعمة
+  try {
+    if (!_audioCtx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; _audioCtx = new AC(); }
+    if (_audioCtx.state === "suspended") _audioCtx.resume();
+    const ctx = _audioCtx;
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(880, now);
+    osc.frequency.exponentialRampToValueAtTime(660, now + 0.06);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.05, now + 0.008); // هادئ جدًا
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(now); osc.stop(now + 0.1);
+  } catch (e) {}
+}
+// تشغيل النقرة عند أي ضغط زر في التطبيق (على مستوى المستند)
+if (typeof document !== "undefined" && !window.__mo_click_bound) {
+  window.__mo_click_bound = true;
+  document.addEventListener("click", (e) => {
+    const el = e.target && e.target.closest ? e.target.closest("button, a, [role=button]") : null;
+    if (el) playClick();
+  }, true);
+}
 
 const CATEGORIES = [
   { id: "jobs", key: "cat_jobs", label: "الوظائف", icon: Briefcase, color: "#19C98A" },
@@ -2331,6 +2368,8 @@ function HelpScreen({ onBack }) {
 function SettingsScreen({ onBack, onLogout, onOpenHelp, onOpenAbout }) {
   const { t, lang, theme, toggleTheme, setLang } = useT();
   const [push, setPush] = useState(true);
+  const [soundOn, setSoundOnState] = useState(isSoundEnabled());
+  const toggleSound = () => { const v = !soundOn; setSoundOnState(v); setSoundEnabled(v); if (v) playClick(); };
   const [langOpen, setLangOpen] = useState(false);
   const langOrder = ["ar", "fr", "en"];
 
@@ -2364,7 +2403,8 @@ function SettingsScreen({ onBack, onLogout, onOpenHelp, onOpenAbout }) {
         </Section>
 
         <Section title={t("settings_notifications")}>
-          <Row icon={Bell} label={t("settings_push")} onClick={() => setPush((v) => !v)} right={<Toggle on={push} onChange={() => setPush((v) => !v)} />} last />
+          <Row icon={Bell} label={t("settings_push")} onClick={() => setPush((v) => !v)} right={<Toggle on={push} onChange={() => setPush((v) => !v)} />} />
+          <Row icon={soundOn ? Bell : Bell} label={t("settings_sound")} onClick={toggleSound} right={<Toggle on={soundOn} onChange={toggleSound} />} last />
         </Section>
 
         <Section title={t("settings_account")}>
