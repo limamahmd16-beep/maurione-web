@@ -501,36 +501,43 @@ function setSoundEnabled(on) { _soundOn = on; try { window.localStorage.setItem(
 function isSoundEnabled() { return _soundOn; }
 function playClick() {
   if (!_soundOn) return;
-  // اهتزاز خفيف جدًا
-  try { if (navigator.vibrate) navigator.vibrate(4); } catch (e) {}
-  // نقرة جافة قصيرة مثل لوحة مفاتيح آبل (نبضة ضجيج مفلترة)
+  try { if (navigator.vibrate) navigator.vibrate(3); } catch (e) {}
+  // نقرة مثل كيبورد آيفون: طقّة قصيرة مقرمشة (ضجيج مفلتر + لمسة نغمة عالية)
   try {
     if (!_audioCtx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; _audioCtx = new AC(); }
     if (_audioCtx.state === "suspended") _audioCtx.resume();
     const ctx = _audioCtx;
     const now = ctx.currentTime;
-    const dur = 0.028; // قصيرة جدًا = إحساس النقرة الجافة
-    // توليد ضجيج أبيض قصير
+    const dur = 0.02;
+    // 1) نبضة ضجيج قصيرة جدًا (جسم النقرة)
     const frames = Math.floor(ctx.sampleRate * dur);
     const buffer = ctx.createBuffer(1, frames, ctx.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < frames; i++) {
-      // انحدار سريع يعطي طقّة "tok"
-      const decay = Math.pow(1 - i / frames, 3);
+      const decay = Math.pow(1 - i / frames, 4);
       data[i] = (Math.random() * 2 - 1) * decay;
     }
     const src = ctx.createBufferSource();
     src.buffer = buffer;
-    // فلتر تمرير نطاقي يعطي نبرة النقرة اللطيفة
     const bp = ctx.createBiquadFilter();
     bp.type = "bandpass";
-    bp.frequency.value = 2600;
-    bp.Q.value = 0.7;
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.22, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
-    src.connect(bp); bp.connect(gain); gain.connect(ctx.destination);
-    src.start(now); src.stop(now + dur + 0.01);
+    bp.frequency.value = 3200;
+    bp.Q.value = 1.1;
+    const ng = ctx.createGain();
+    ng.gain.setValueAtTime(0.18, now);
+    ng.gain.exponentialRampToValueAtTime(0.001, now + dur);
+    src.connect(bp); bp.connect(ng); ng.connect(ctx.destination);
+    src.start(now); src.stop(now + dur + 0.005);
+    // 2) لمسة نغمة عالية قصيرة (تعطي القرمشة المميزة)
+    const osc = ctx.createOscillator();
+    const og = ctx.createGain();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(2200, now);
+    osc.frequency.exponentialRampToValueAtTime(1500, now + 0.012);
+    og.gain.setValueAtTime(0.05, now);
+    og.gain.exponentialRampToValueAtTime(0.0005, now + 0.018);
+    osc.connect(og); og.connect(ctx.destination);
+    osc.start(now); osc.stop(now + 0.02);
   } catch (e) {}
 }
 // تشغيل النقرة عند أي ضغط زر في التطبيق (على مستوى المستند)
@@ -677,7 +684,7 @@ function Chip({ children, active, onClick, color }) {
 }
 
 function CategoryIcon({ cat, size = 20, box = 56, active = false }) {
-  const color = cat?.color || C.gray;
+  const color = "#19C98A"; // لون موحّد أخضر لكل الأقسام
   const Icon = cat?.icon || MoreHorizontal;
   const radius = Math.round(box * 0.30);
   return (
@@ -3091,6 +3098,8 @@ function MauriOneInner() {
       <style>{`
         .mo-frame { max-width: 420px; padding-top: env(safe-area-inset-top); }
         .mo-nav { max-width: 420px; padding-bottom: env(safe-area-inset-bottom); }
+        button, a, [role=button] { -webkit-tap-highlight-color: transparent; transition: transform .08s ease, opacity .08s ease, filter .08s ease; }
+        button:active, a:active, [role=button]:active { transform: scale(0.94); opacity: 0.85; filter: brightness(1.1); }
         @media (min-width: 700px) {
           .mo-frame { max-width: 720px; }
           .mo-nav { max-width: 720px; }
