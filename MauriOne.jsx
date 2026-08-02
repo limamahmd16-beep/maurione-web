@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef, createContext, useContext } from "react";
 import { db } from "./firebase.js";
+import { auth } from "./firebase.js";
+import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, updateDoc, increment, serverTimestamp } from "firebase/firestore";
 
 // ===== Cloudinary: رفع الصور للسحابة =====
@@ -870,9 +872,9 @@ function OnboardingScreen({ onStart, onLogin }) {
 }
 
 // ---------- Auth ----------
-function SocialButton({ label, symbol, color }) {
+function SocialButton({ label, symbol, color, onClick }) {
   return (
-    <button onClick={() => toast(label)} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl" style={{ border: `1px solid ${D.border}` }}>
+    <button onClick={onClick || (() => toast(label))} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl" style={{ border: `1px solid ${D.border}` }}>
       <span className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-black" style={{ background: color, color: "#0B0F14" }}>{symbol}</span>
       <span className="text-sm font-medium" style={{ color: D.white }}>{label}</span>
     </button>
@@ -899,7 +901,7 @@ function AuthShell({ children, onBack }) {
   );
 }
 
-function LoginScreen({ onLogin, onGoSignup, onBack }) {
+function LoginScreen({ onLogin, onGoSignup, onBack, onGoogle }) {
   const { t, lang, setLang, dir } = useT();
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
@@ -921,7 +923,7 @@ function LoginScreen({ onLogin, onGoSignup, onBack }) {
           <span className="text-xs" style={{ color: D.grayDim }}>{t("or")}</span>
           <div className="flex-1 h-px" style={{ background: D.border }} />
         </div>
-        <SocialButton label={t("login_google")} symbol="G" color="#fff" />
+        <SocialButton label={t("login_google")} symbol="G" color="#fff" onClick={onGoogle} />
         <SocialButton label={t("login_apple")} symbol="" color="#fff" />
         <button onClick={onGoSignup} className="text-sm text-center mt-2" style={{ color: D.gray }}>
           {t("no_account")} <span style={{ color: D.green, fontWeight: 700 }}>{t("create_account")}</span>
@@ -931,7 +933,7 @@ function LoginScreen({ onLogin, onGoSignup, onBack }) {
   );
 }
 
-function SignupScreen({ onSignup, onGoLogin, onBack }) {
+function SignupScreen({ onSignup, onGoLogin, onBack, onGoogle }) {
   const { t, lang, setLang, dir } = useT();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -965,7 +967,7 @@ function SignupScreen({ onSignup, onGoLogin, onBack }) {
           <span className="text-xs" style={{ color: D.grayDim }}>{t("or")}</span>
           <div className="flex-1 h-px" style={{ background: D.border }} />
         </div>
-        <SocialButton label={t("signup_google")} symbol="G" color="#fff" />
+        <SocialButton label={t("signup_google")} symbol="G" color="#fff" onClick={onGoogle} />
         <SocialButton label={t("signup_apple")} symbol="" color="#fff" />
         <button onClick={onGoLogin} className="text-sm text-center mt-2" style={{ color: D.gray }}>
           {t("have_account")} <span style={{ color: D.green, fontWeight: 700 }}>{t("login")}</span>
@@ -2515,6 +2517,47 @@ function MauriOneInner() {
     return id;
   }, []);
 
+  // حساب المستخدم الحقيقي من Firebase (تسجيل الدخول بقوقل)
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    try {
+      const unsub = onAuthStateChanged(auth, (u) => {
+        setUser(u);
+        if (u) {
+          // تحديث الملف الشخصي ببيانات حساب قوقل
+          setProfile((p) => ({
+            ...p,
+            name: u.displayName || p.name,
+            avatar: u.photoURL || p.avatar,
+          }));
+        }
+      });
+      return () => unsub();
+    } catch (e) { console.error(e); }
+  }, []);
+
+  // معرّف مالك الإعلان: حساب قوقل إن وُجد، وإلا معرّف الجهاز
+  const ownerId = user ? user.uid : deviceId;
+
+  // تسجيل الدخول بقوقل
+  const handleGoogleSignIn = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      setPhase("app"); // دخول مباشر بعد نجاح تسجيل الدخول
+    } catch (e) {
+      console.error(e);
+      const msg = (e && (e.code || e.message)) ? `${e.code || ""} ${e.message || ""}` : String(e);
+      toast("تعذّر تسجيل الدخول: " + msg);
+      alert("سبب فشل تسجيل الدخول بقوقل:\n\n" + msg);
+    }
+  };
+
+  // تسجيل الخروج
+  const handleSignOut = async () => {
+    try { await signOut(auth); } catch (e) {}
+  };
+
   // مزامنة الإعلانات من Firestore لحظيًا (تظهر لكل المستخدمين)
   useEffect(() => {
     try {
@@ -2522,13 +2565,13 @@ function MauriOneInner() {
       const unsub = onSnapshot(q, (snap) => {
         const list = snap.docs.map((d) => {
           const data = d.data();
-          return { ...data, id: d.id, mine: data.ownerId === deviceId };
+          return { ...data, id: d.id, mine: data.ownerId === ownerId };
         });
         setAds(list);
       }, (err) => { console.error("Firestore:", err); });
       return () => unsub();
     } catch (e) { console.error(e); }
-  }, [deviceId]);
+  }, [ownerId]);
 
   const myAdsCount = ads.filter((a) => a.mine).length;
   const totalViews = ads.filter((a) => a.mine).reduce((sum, a) => sum + (a.views || 0), 0);
@@ -2565,7 +2608,7 @@ function MauriOneInner() {
       condition: NO_CONDITION_CATS.includes(form.cat) ? t(form.adType) : t(form.condition),
       desc: form.desc, specs: specsArr, phone: form.phone, seller: profile.name || t("guest"),
       rating: 0, reviews: 0, verified: false, images: form.images || [],
-      ownerId: deviceId, createdAt: serverTimestamp(),
+      ownerId: ownerId, createdAt: serverTimestamp(),
     };
     try {
       await addDoc(collection(db, "ads"), newAd);
@@ -2594,7 +2637,7 @@ function MauriOneInner() {
     <div dir={dir} className="w-full flex justify-center" style={{ background: "#000", minHeight: "100vh", fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif" }}>
       <div className="w-full mo-frame" style={{ minHeight: "100vh", background: C.bg }}>
         <ToastHost />
-        <LoginScreen onLogin={() => setPhase("otp")} onGoSignup={() => setPhase("signup")} onBack={() => setPhase("onboarding")} />
+        <LoginScreen onLogin={() => setPhase("otp")} onGoSignup={() => setPhase("signup")} onBack={() => setPhase("onboarding")} onGoogle={handleGoogleSignIn} />
       </div>
     </div>
   );
@@ -2603,7 +2646,7 @@ function MauriOneInner() {
     <div dir={dir} className="w-full flex justify-center" style={{ background: "#000", minHeight: "100vh", fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif" }}>
       <div className="w-full mo-frame" style={{ minHeight: "100vh", background: C.bg }}>
         <ToastHost />
-        <SignupScreen onSignup={() => setPhase("otp")} onGoLogin={() => setPhase("login")} onBack={() => setPhase("onboarding")} />
+        <SignupScreen onSignup={() => setPhase("otp")} onGoLogin={() => setPhase("login")} onBack={() => setPhase("onboarding")} onGoogle={handleGoogleSignIn} />
       </div>
     </div>
   );
@@ -2627,7 +2670,7 @@ function MauriOneInner() {
   } else if (showReviews) {
     body = <ReviewsScreen onBack={() => setShowReviews(false)} />;
   } else if (showSettings) {
-    body = <SettingsScreen onBack={() => setShowSettings(false)} onLogout={() => { setShowSettings(false); setShowNotifs(false); setShowFavorites(false); setShowMyAds(false); setSelectedAd(null); setTab("home"); setPhase("onboarding"); }} />;
+    body = <SettingsScreen onBack={() => setShowSettings(false)} onLogout={() => { handleSignOut(); setShowSettings(false); setShowNotifs(false); setShowFavorites(false); setShowMyAds(false); setSelectedAd(null); setTab("home"); setPhase("onboarding"); }} />;
   } else if (showMyAds) {
     body = <MyAdsScreen ads={ads} favorites={favorites} onToggleFav={toggleFav} onOpenAd={openAd} onBack={() => setShowMyAds(false)} onDelete={deleteAd} onClearAll={clearAllAds} onRestore={restoreSeed} />;
   } else if (showFavorites) {
@@ -2643,7 +2686,7 @@ function MauriOneInner() {
   } else if (tab === "messages") {
     body = <MessagesScreen onBack={() => setTab("home")} />;
   } else if (tab === "profile") {
-    body = <ProfileScreen profile={profile} setProfile={setProfile} myAdsCount={myAdsCount} totalViews={totalViews} onOpenFavorites={() => setShowFavorites(true)} onOpenMyAds={() => setShowMyAds(true)} onOpenSettings={() => setShowSettings(true)} onOpenStats={() => setShowStats(true)} onOpenPlans={() => setShowPlans(true)} onOpenReviews={() => setShowReviews(true)} favCount={favorites.size} msgCount={unreadMsgs} notifCount={unreadNotifs} onLogout={() => { setShowNotifs(false); setShowFavorites(false); setShowMyAds(false); setSelectedAd(null); setTab("home"); setPhase("onboarding"); }} onOpenNotifs={() => setShowNotifs(true)} onOpenMessages={() => setTab("messages")} />;
+    body = <ProfileScreen profile={profile} setProfile={setProfile} myAdsCount={myAdsCount} totalViews={totalViews} onOpenFavorites={() => setShowFavorites(true)} onOpenMyAds={() => setShowMyAds(true)} onOpenSettings={() => setShowSettings(true)} onOpenStats={() => setShowStats(true)} onOpenPlans={() => setShowPlans(true)} onOpenReviews={() => setShowReviews(true)} favCount={favorites.size} msgCount={unreadMsgs} notifCount={unreadNotifs} onLogout={() => { handleSignOut(); setShowNotifs(false); setShowFavorites(false); setShowMyAds(false); setSelectedAd(null); setTab("home"); setPhase("onboarding"); }} onOpenNotifs={() => setShowNotifs(true)} onOpenMessages={() => setTab("messages")} />;
   }
 
   const hideNav = !!selectedAd || showNotifs || showFavorites || showMyAds || showSettings || showStats || showPlans || showReviews || tab === "add";
