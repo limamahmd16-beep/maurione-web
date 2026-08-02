@@ -1572,6 +1572,7 @@ function AddAdScreen({ onPublish, onExit }) {
   const [step, setStep] = useState(0);
   const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(0);
+  const [publishing, setPublishing] = useState(false);
   const [form, setForm] = useState({ cat: "cars", adType: "type_sale", title: "", price: "", condition: "cond_new", desc: "", city: "", area: "", phone: "", whatsapp: true, images: [], specs: {} });
   const [done, setDone] = useState(false);
   const update = (k, v) => setForm((f) => ({ ...f, [k]: v }));
@@ -1590,10 +1591,16 @@ function AddAdScreen({ onPublish, onExit }) {
     if (step === 3 && !form.phone) return t("need_phone");
     return null;
   };
-  const handleNext = () => {
+  const handleNext = async () => {
     const missing = missingForStep();
     if (missing) { toast(missing); return; }
-    if (step === 4) { onPublish(form); setDone(true); return; }
+    if (step === 4) {
+      setPublishing(true);
+      const ok = await onPublish(form);
+      setPublishing(false);
+      if (ok) setDone(true);
+      return;
+    }
     setStep((s) => s + 1);
   };
   const canNext = !missingForStep();
@@ -1827,8 +1834,8 @@ function AddAdScreen({ onPublish, onExit }) {
         {step > 0 && (
           <button onClick={() => setStep((s) => s - 1)} className="px-5 py-3 rounded-xl font-bold text-sm" style={{ border: `1px solid ${C.border}`, color: C.white }}>{t("back")}</button>
         )}
-        <button onClick={handleNext} className="flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-1.5" style={{ background: canNext ? C.green : hexToRgba(C.green, 0.4), color: canNext ? "#07130E" : hexToRgba("#07130E", 0.7) }}>
-          {step === 4 ? t("publish_ad") : t("next")} <ArrowLeft size={15} />
+        <button onClick={handleNext} disabled={publishing} className="flex-1 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-1.5" style={{ background: canNext ? C.green : hexToRgba(C.green, 0.4), color: canNext ? "#07130E" : hexToRgba("#07130E", 0.7) }}>
+          {step === 4 ? (publishing ? "جارٍ النشر..." : t("publish_ad")) : t("next")} <ArrowLeft size={15} />
         </button>
       </div>
     </div>
@@ -2560,8 +2567,13 @@ function MauriOneInner() {
     try {
       await addDoc(collection(db, "ads"), newAd);
       // لا نضيف محليًا — onSnapshot يجلبه تلقائيًا من السحابة
+      return true;
     } catch (e) {
-      console.error(e); toast("تعذّر النشر، حاول مجددًا");
+      console.error(e);
+      const msg = (e && (e.code || e.message)) ? `${e.code || ""} ${e.message || ""}` : String(e);
+      toast("خطأ: " + msg);
+      alert("سبب فشل النشر:\n\n" + msg);
+      return false;
     }
   };
 
