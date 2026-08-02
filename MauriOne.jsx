@@ -200,6 +200,7 @@ const T = {
   no_messages_sub: { ar: "ستظهر محادثاتك مع البائعين والمشترين هنا", fr: "Vos conversations apparaîtront ici", en: "Your conversations will appear here" },
   no_notifications: { ar: "لا توجد إشعارات", fr: "Aucune notification", en: "No notifications" },
   no_notifications_sub: { ar: "ستظهر تنبيهاتك هنا عند وصولها", fr: "Vos alertes apparaîtront ici", en: "Your alerts will appear here" },
+  your_number: { ar: "رقمك", fr: "votre numéro", en: "your number" },
   back_to_list: { ar: "العودة للقائمة", fr: "Retour à la liste", en: "Back to list" },
 
   // ---- notifications ----
@@ -992,7 +993,7 @@ function LoginScreen({ onLogin, onGoSignup, onBack, onGoogle }) {
         <Field icon={User} value={id} onChange={setId} placeholder={t("phone_or_email")} />
         <Field icon={Lock} value={pw} onChange={setPw} placeholder={t("password")} type="password" />
         <button onClick={() => toast(t("reset_password_sent"))} className="text-sm text-left" style={{ color: D.green }}>{t("forgot_password")}</button>
-        <button onClick={onLogin} className="w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-1" style={{ background: D.green, color: "#07130E" }}>
+        <button onClick={() => onLogin(id)} className="w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-1" style={{ background: D.green, color: "#07130E" }}>
           {t("login")} <ArrowLeft size={16} />
         </button>
         <div className="flex items-center gap-3 my-1">
@@ -1036,7 +1037,7 @@ function SignupScreen({ onSignup, onGoLogin, onBack, onGoogle }) {
             {agree && <Check size={11} color="#07130E" />}
           </span>
         </button>
-        <button onClick={onSignup} className="w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-1" style={{ background: D.green, color: "#07130E" }}>
+        <button onClick={() => onSignup(phone)} className="w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 mt-1" style={{ background: D.green, color: "#07130E" }}>
           {t("create_account")} <ArrowLeft size={16} />
         </button>
         <div className="flex items-center gap-3 my-1">
@@ -1054,7 +1055,7 @@ function SignupScreen({ onSignup, onGoLogin, onBack, onGoogle }) {
   );
 }
 
-function OtpScreen({ onVerify, onBack }) {
+function OtpScreen({ onVerify, onBack, contact }) {
   const { t, lang, setLang, dir } = useT();
   const [digits, setDigits] = useState(["", "", "", "", "", ""]);
   const [seconds, setSeconds] = useState(56);
@@ -1075,7 +1076,7 @@ function OtpScreen({ onVerify, onBack }) {
     <AuthShell onBack={onBack}>
       <h2 className="text-xl font-bold text-center mb-1" style={{ color: D.white }}>{t("otp_title")}</h2>
       <p className="text-sm text-center mb-1" style={{ color: D.gray }}>{t("otp_subtitle")}</p>
-      <p className="text-sm text-center mb-5" style={{ color: D.gray }}>{t("otp_sent")} <span style={{ color: D.green }}>+222 45 67 89 xx</span></p>
+      <p className="text-sm text-center mb-5" style={{ color: D.gray }}>{t("otp_sent")} <span style={{ color: D.green }} dir="ltr">{contact || t("your_number")}</span></p>
       <div className="flex justify-center gap-2 mb-5" dir="ltr">
         {digits.map((d, i) => (
           <input
@@ -2753,6 +2754,7 @@ const NAV = [
 function MauriOneInner() {
   const { lang, dir, t } = useT();
   const [phase, setPhase] = useState("splash"); // splash -> onboarding -> login/signup/otp -> app
+  const [authContact, setAuthContact] = useState("");
   const [tab, setTab] = useState("home");
   const [ads, setAds] = useState([]);           // الإعلانات من Firestore (سحابية، للجميع)
   const [favorites, setFavorites] = useState(new Set());
@@ -2919,7 +2921,7 @@ function MauriOneInner() {
     <div dir={dir} className="w-full flex justify-center" style={{ background: "#000", minHeight: "100vh", fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif" }}>
       <div className="w-full mo-frame" style={{ minHeight: "100vh", background: C.bg }}>
         <ToastHost />
-        <LoginScreen onLogin={() => setPhase("otp")} onGoSignup={() => setPhase("signup")} onBack={() => setPhase("onboarding")} onGoogle={handleGoogleSignIn} />
+        <LoginScreen onLogin={(id) => { setAuthContact(id || ""); setPhase("otp"); }} onGoSignup={() => setPhase("signup")} onBack={() => setPhase("onboarding")} onGoogle={handleGoogleSignIn} />
       </div>
     </div>
   );
@@ -2928,7 +2930,7 @@ function MauriOneInner() {
     <div dir={dir} className="w-full flex justify-center" style={{ background: "#000", minHeight: "100vh", fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif" }}>
       <div className="w-full mo-frame" style={{ minHeight: "100vh", background: C.bg }}>
         <ToastHost />
-        <SignupScreen onSignup={() => setPhase("otp")} onGoLogin={() => setPhase("login")} onBack={() => setPhase("onboarding")} onGoogle={handleGoogleSignIn} />
+        <SignupScreen onSignup={(ph) => { setAuthContact(ph || ""); setPhase("otp"); }} onGoLogin={() => setPhase("login")} onBack={() => setPhase("onboarding")} onGoogle={handleGoogleSignIn} />
       </div>
     </div>
   );
@@ -2937,7 +2939,7 @@ function MauriOneInner() {
     <div dir={dir} className="w-full flex justify-center" style={{ background: "#000", minHeight: "100vh", fontFamily: "'Segoe UI', Tahoma, Arial, sans-serif" }}>
       <div className="w-full mo-frame" style={{ minHeight: "100vh", background: C.bg }}>
         <ToastHost />
-        <OtpScreen onVerify={() => setPhase("app")} onBack={() => setPhase("login")} />
+        <OtpScreen contact={authContact} onVerify={() => setPhase("app")} onBack={() => setPhase("login")} />
       </div>
     </div>
   );
