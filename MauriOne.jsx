@@ -62,6 +62,7 @@ const T = {
   or: { ar: "أو", fr: "ou", en: "or" },
   login_google: { ar: "الدخول باستخدام Google", fr: "Continuer avec Google", en: "Continue with Google" },
   login_apple: { ar: "الدخول باستخدام Apple", fr: "Continuer avec Apple", en: "Continue with Apple" },
+  login_to_post: { ar: "يرجى تسجيل الدخول لإضافة إعلان", fr: "Veuillez vous connecter pour publier une annonce", en: "Please log in to post an ad" },
   no_account: { ar: "ليس لديك حساب؟", fr: "Pas de compte ?", en: "No account?" },
   create_account: { ar: "إنشاء حساب", fr: "Créer un compte", en: "Sign Up" },
   create_account_title: { ar: "إنشاء حساب جديد", fr: "Créer un nouveau compte", en: "Create a new account" },
@@ -2242,9 +2243,9 @@ function MessagesScreen({ onBack }) {
 }
 
 // ---------- Favorites ----------
-function MyAdsScreen({ ads, favorites, onToggleFav, onOpenAd, onBack, onDelete, onClearAll, onRestore }) {
+function MyAdsScreen({ ads, favorites, onToggleFav, onOpenAd, onBack, onDelete, onClearAll, onRestore, canDelete }) {
   const { t } = useT();
-  const mine = ads.filter((a) => a.mine);  // إعلاناتي فقط (اللي أملكها)
+  const mine = ads.filter((a) => canDelete(a));  // إعلانات المستخدم المسجّل فقط
   const [confirmId, setConfirmId] = useState(null);
   const [confirmClear, setConfirmClear] = useState(false);
   return (
@@ -2978,13 +2979,24 @@ function MauriOneInner() {
     try { await updateDoc(doc(db, "ads", ad.id), { views: increment(1) }); } catch (e) {}
   };
   const goSearch = (catId) => { setSearchCat(catId || "all"); setTab("search"); };
+  const goAdd = () => {
+    if (user) {
+      setTab("add");
+      return;
+    }
+    setPhase("login");
+    setTimeout(() => toast(t("login_to_post")), 0);
+  };
+  const canDeleteAd = (ad) => !!user && ad.ownerId === user.uid;
   const deleteAd = async (id) => {
+    const ad = ads.find((item) => item.id === id);
+    if (!ad || !canDeleteAd(ad)) return;
     setSelectedAd((cur) => (cur && cur.id === id ? null : cur));
     setFavorites((prev) => { const n = new Set(prev); n.delete(id); return n; });
     try { await deleteDoc(doc(db, "ads", id)); toast(t("ad_deleted")); } catch (e) { toast("تعذّر الحذف"); }
   };
   const clearAllAds = async () => {
-    const mine = ads.filter((a) => a.mine);
+    const mine = ads.filter(canDeleteAd);
     for (const a of mine) { try { await deleteDoc(doc(db, "ads", a.id)); } catch (e) {} }
     toast(t("all_ads_cleared"));
   };
@@ -3074,13 +3086,13 @@ function MauriOneInner() {
   } else if (showSettings) {
     body = <SettingsScreen onOpenAbout={() => { setShowSettings(false); setShowAbout(true); }} onOpenHelp={() => { setShowSettings(false); setShowHelp(true); }} onBack={() => setShowSettings(false)} onLogout={() => { handleSignOut(); setShowSettings(false); setShowNotifs(false); setShowFavorites(false); setShowMyAds(false); setSelectedAd(null); setTab("home"); setPhase("onboarding"); }} />;
   } else if (showMyAds) {
-    body = <MyAdsScreen ads={ads} favorites={favorites} onToggleFav={toggleFav} onOpenAd={openAd} onBack={() => setShowMyAds(false)} onDelete={deleteAd} onClearAll={clearAllAds} onRestore={restoreSeed} />;
+    body = <MyAdsScreen ads={ads} favorites={favorites} onToggleFav={toggleFav} onOpenAd={openAd} onBack={() => setShowMyAds(false)} onDelete={deleteAd} onClearAll={clearAllAds} onRestore={restoreSeed} canDelete={canDeleteAd} />;
   } else if (showFavorites) {
     body = <FavoritesScreen ads={ads} favorites={favorites} onToggleFav={toggleFav} onOpenAd={openAd} onBack={() => setShowFavorites(false)} />;
   } else if (selectedAd) {
-    body = <AdDetailsScreen ad={selectedAd} isFav={favorites.has(selectedAd.id)} onToggleFav={toggleFav} onBack={() => setSelectedAd(null)} ads={ads} onOpenAd={openAd} onDelete={deleteAd} />;
+    body = <AdDetailsScreen ad={selectedAd} isFav={favorites.has(selectedAd.id)} onToggleFav={toggleFav} onBack={() => setSelectedAd(null)} ads={ads} onOpenAd={openAd} onDelete={canDeleteAd(selectedAd) ? deleteAd : null} />;
   } else if (tab === "home") {
-    body = <HomeScreen ads={ads} favorites={favorites} onToggleFav={toggleFav} onOpenAd={openAd} onSelectCategory={goSearch} onGoSearch={() => goSearch("all")} onGoAdd={() => setTab("add")} onOpenMenu={() => setTab("profile")} onOpenNotifs={() => setShowNotifs(true)} onOpenMessages={() => setTab("messages")} notifCount={unreadNotifs} msgCount={unreadMsgs} />;
+    body = <HomeScreen ads={ads} favorites={favorites} onToggleFav={toggleFav} onOpenAd={openAd} onSelectCategory={goSearch} onGoSearch={() => goSearch("all")} onGoAdd={goAdd} onOpenMenu={() => setTab("profile")} onOpenNotifs={() => setShowNotifs(true)} onOpenMessages={() => setTab("messages")} notifCount={unreadNotifs} msgCount={unreadMsgs} />;
   } else if (tab === "search") {
     body = <SearchScreen ads={ads} favorites={favorites} onToggleFav={toggleFav} onOpenAd={openAd} initialCat={searchCat} />;
   } else if (tab === "add") {
@@ -3123,7 +3135,7 @@ function MauriOneInner() {
         {!hideNav && (
           <div className="fixed w-full flex items-center justify-around py-2 z-30 mo-nav" style={{ background: C.bg, borderTop: `1px solid ${C.border}`, bottom: 0 }}>
             {NAV.map((n) => n.id === "add" ? (
-              <button key={n.id} onClick={() => setTab("add")} className="w-14 h-14 rounded-full flex items-center justify-center -mt-6" style={{ background: `linear-gradient(145deg, #2AE6A0, ${C.green} 60%, ${C.greenDim})`, boxShadow: `0 6px 20px ${hexToRgba(C.green, 0.5)}, inset 0 1px 0 ${hexToRgba("#FFFFFF", 0.3)}` }}>
+              <button key={n.id} onClick={goAdd} className="w-14 h-14 rounded-full flex items-center justify-center -mt-6" style={{ background: `linear-gradient(145deg, #2AE6A0, ${C.green} 60%, ${C.greenDim})`, boxShadow: `0 6px 20px ${hexToRgba(C.green, 0.5)}, inset 0 1px 0 ${hexToRgba("#FFFFFF", 0.3)}` }}>
                 <Plus size={24} color="#07130E" strokeWidth={2.6} />
               </button>
             ) : (
