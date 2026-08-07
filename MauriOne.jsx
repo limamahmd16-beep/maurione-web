@@ -2673,13 +2673,20 @@ function ProfileScreen({ profile, setProfile, myAdsCount, totalViews, onOpenFavo
   const [draft, setDraft] = useState(profile);
   const openEdit = () => { setDraft(profile); setEditing(true); };
   const saveEdit = () => { setProfile(draft); setEditing(false); toast(t("profile_saved")); };
-  const pickAvatar = (e) => {
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const pickAvatar = async (e) => {
     const file = (e.target.files || [])[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => setProfile((p) => ({ ...p, avatar: ev.target.result }));
-    reader.readAsDataURL(file);
     e.target.value = "";
+    setAvatarUploading(true);
+    try {
+      const url = await uploadToCloudinary(file);   // رفع حقيقي للسحابة بدل base64
+      setProfile((p) => ({ ...p, avatar: url }));
+    } catch (err) {
+      toast("تعذّر رفع الصورة");
+    } finally {
+      setAvatarUploading(false);
+    }
   };
   const menu = [
     { label: t("my_ads"), sub: t("my_ads_sub"), icon: ClipboardList, color: C.green, onClick: onOpenMyAds },
@@ -2718,7 +2725,9 @@ function ProfileScreen({ profile, setProfile, myAdsCount, totalViews, onOpenFavo
         <div className="flex items-start gap-3 mb-3">
           <div className="relative">
             <div className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden" style={{ background: C.cardAlt }}>
-              {profile.avatar
+              {avatarUploading ? (
+                <div className="w-5 h-5 rounded-full border-2 animate-spin" style={{ borderColor: C.green, borderTopColor: "transparent" }} />
+              ) : profile.avatar
                 ? <img src={profile.avatar} alt="" className="w-full h-full object-cover" />
                 : <User size={26} color={C.gray} />}
             </div>
