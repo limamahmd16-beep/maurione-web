@@ -1438,7 +1438,7 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
           </div>
         }
       />
-      <div className="flex items-center justify-between px-4 -mt-1 pb-2">
+      <div className="relative z-10 flex items-center justify-between px-4 pt-1 pb-2">
         <span />
         <div className="flex gap-2">
           {onDelete && (
@@ -1542,7 +1542,7 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
                 const k = Array.isArray(sp) ? sp[0] : sp.label;
                 const v = Array.isArray(sp) ? sp[1] : sp.value;
                 const iconRef = Array.isArray(sp) ? sp[2] : sp.icon;
-                const SpecIcon = typeof iconRef === "function" ? iconRef : (SPEC_ICON[iconRef] || ClipboardList);
+                const SpecIcon = resolveSpecIcon(iconRef);
                 return (
                   <div key={i} className="flex flex-col items-center text-center gap-1">
                     <SpecIcon size={16} color={C.green} />
@@ -1744,6 +1744,21 @@ const SPEC_ICON = {
   serviceType: Wrench, workAreas: MapPin, priceRange: ClipboardList,
   itemType: ClipboardList,
 };
+// بعض المفاتيح مشتركة بين أقسام مختلفة بنفس الاسم لكن بمعنى مختلف (مثلاً "brand"/"model" فـ السيارات مقابل الهواتف)
+// هاذ الجدول كيعطي أولوية لأيقونة القسم إذا كانت موجودة، قبل الرجوع للأيقونة العامة فـ SPEC_ICON
+const CATEGORY_SPEC_ICON_OVERRIDES = {
+  phones: { brand: Smartphone, model: Smartphone, color: Smartphone },
+  more: { brand: ClipboardList },
+};
+function resolveSpecIcon(iconRef) {
+  if (typeof iconRef === "function") return iconRef;
+  if (typeof iconRef === "string" && iconRef.includes("|")) {
+    const [catId, key] = iconRef.split("|");
+    const override = CATEGORY_SPEC_ICON_OVERRIDES[catId] && CATEGORY_SPEC_ICON_OVERRIDES[catId][key];
+    return override || SPEC_ICON[key] || ClipboardList;
+  }
+  return SPEC_ICON[iconRef] || ClipboardList;
+}
 
 function StepDots({ step }) {
   const { t } = useT();
@@ -3020,7 +3035,7 @@ function MauriOneInner() {
     const fieldDefs = CATEGORY_FIELDS[form.cat] || [];
     const specsArr = fieldDefs
       .filter((f) => form.specs[f.key])
-      .map((f) => ({ label: fieldLabel(f.key, lang), value: form.specs[f.key], icon: f.key })); // objects (Firestore-safe)
+      .map((f) => ({ label: fieldLabel(f.key, lang), value: form.specs[f.key], icon: `${form.cat}|${f.key}` })); // objects (Firestore-safe)
     const newAd = {
       cat: form.cat, title: form.title, price: form.price, currency: t("currency"),
       city: form.city, area: form.area || "", views: 0, featured: true,
