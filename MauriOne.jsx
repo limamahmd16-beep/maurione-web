@@ -1404,7 +1404,7 @@ function SearchScreen({ ads, favorites, onToggleFav, onOpenAd, initialCat }) {
 }
 
 // ---------- Ad details ----------
-function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDelete }) {
+function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDelete, profile, ownerId }) {
   const [confirmDel, setConfirmDel] = useState(false);
   const { t, lang, setLang, dir } = useT();
   const [toast, setToast] = useState("");
@@ -1421,6 +1421,11 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
   const totalImgs = gallery.length;
   const similar = ads.filter((a) => a.cat === ad.cat && a.id !== ad.id).slice(0, 4);
   const sellerAds = ads.filter((a) => a.ownerId && a.ownerId === ad.ownerId);
+  // إذا كان هذا إعلانك، اعرض اسمك وصورتك الحاليين من الملف الشخصي بدل النسخة القديمة المخزنة وقت النشر
+  const isOwnAd = !!(profile && ownerId && ad.ownerId === ownerId);
+  const displaySeller = isOwnAd ? (profile.name || ad.seller) : ad.seller;
+  const displaySellerAvatar = isOwnAd ? (profile.avatar || ad.sellerAvatar) : ad.sellerAvatar;
+  const displaySellerUsername = isOwnAd ? (profile.username || ad.sellerUsername) : ad.sellerUsername;
 
   return (
     <div className="pb-28 relative">
@@ -1479,7 +1484,7 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
 
       {fullView && totalImgs > 0 && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center" style={{ background: "rgba(0,0,0,0.94)" }} onClick={() => setFullView(false)}>
-          <button onClick={() => setFullView(false)} className="absolute top-5 left-5 w-10 h-10 rounded-full flex items-center justify-center z-10" style={{ background: "rgba(255,255,255,0.12)" }}>
+          <button onClick={() => setFullView(false)} className="absolute w-10 h-10 rounded-full flex items-center justify-center z-10" style={{ background: "rgba(255,255,255,0.12)", top: "max(20px, env(safe-area-inset-top))", left: 20 }}>
             <X size={20} color="#fff" />
           </button>
           <img src={gallery[imgIdx % totalImgs]} alt="" className="max-w-full max-h-full object-contain" onClick={(e) => e.stopPropagation()} />
@@ -1556,7 +1561,7 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
               <User size={19} color={C.gray} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold flex items-center gap-1" style={{ color: C.white }}>{ad.seller}{ad.verified && <CheckCircle2 size={13} color={C.green} />}</p>
+              <p className="text-sm font-bold flex items-center gap-1" style={{ color: C.white }}>{displaySeller}{ad.verified && <CheckCircle2 size={13} color={C.green} />}</p>
               <p className="text-xs flex items-center gap-1" style={{ color: C.grayDim }}><Star size={11} color={C.gold} fill={C.gold} />{ad.rating} ({ad.reviews})</p>
             </div>
             <button onClick={() => setShowSeller(true)} className="text-xs px-3 py-2 rounded-lg font-bold shrink-0" style={{ border: `1px solid ${C.green}`, color: C.green }}>{t("view_profile")}</button>
@@ -1572,11 +1577,11 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
               <div className="w-10 h-1 rounded-full mx-auto mb-1" style={{ background: C.border }} />
               <div className="flex items-center gap-3">
                 <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center shrink-0" style={{ background: C.cardAlt }}>
-                  {ad.sellerAvatar ? <img src={ad.sellerAvatar} alt="" className="w-full h-full object-cover" /> : <User size={26} color={C.gray} />}
+                  {displaySellerAvatar ? <img src={displaySellerAvatar} alt="" className="w-full h-full object-cover" /> : <User size={26} color={C.gray} />}
                 </div>
                 <div className="flex-1">
-                  <p className="text-lg font-bold flex items-center gap-1" style={{ color: C.white }}>{ad.seller}{ad.verified && <CheckCircle2 size={15} color={C.green} />}</p>
-                  {ad.sellerUsername && <p className="text-xs" style={{ color: C.green }}>@{ad.sellerUsername}</p>}
+                  <p className="text-lg font-bold flex items-center gap-1" style={{ color: C.white }}>{displaySeller}{ad.verified && <CheckCircle2 size={15} color={C.green} />}</p>
+                  {displaySellerUsername && <p className="text-xs" style={{ color: C.green }}>@{displaySellerUsername}</p>}
                   <p className="text-xs flex items-center gap-1 mt-1" style={{ color: C.gray }}><Star size={12} color={C.gold} fill={C.gold} />{ad.rating || 0} ({ad.reviews || 0} {t("reviews_count")}) · {sellerAds.length} {t("ads")}</p>
                 </div>
               </div>
@@ -1611,7 +1616,7 @@ function AdDetailsScreen({ ad, isFav, onToggleFav, onBack, ads, onOpenAd, onDele
             <div onClick={(e) => e.stopPropagation()} className="w-full rounded-t-3xl p-5 flex flex-col gap-3" style={{ maxWidth: 420, background: C.card, borderTop: `1px solid ${C.border}` }}>
               <div className="w-10 h-1 rounded-full mx-auto mb-1" style={{ background: C.border }} />
               <p className="text-base font-bold text-center" style={{ color: C.white }}>{t("rate_seller")}</p>
-              <p className="text-xs text-center" style={{ color: C.gray }}>{ad.seller}</p>
+              <p className="text-xs text-center" style={{ color: C.gray }}>{displaySeller}</p>
               <p className="text-xs text-center mt-1" style={{ color: C.gray }}>{t("your_rating")}</p>
               <div className="flex items-center justify-center gap-2 my-1">
                 {[1, 2, 3, 4, 5].map((i) => (
@@ -3099,7 +3104,7 @@ function MauriOneInner() {
   } else if (showFavorites) {
     body = <FavoritesScreen ads={ads} favorites={favorites} onToggleFav={toggleFav} onOpenAd={openAd} onBack={() => setShowFavorites(false)} />;
   } else if (selectedAd) {
-    body = <AdDetailsScreen ad={selectedAd} isFav={favorites.has(selectedAd.id)} onToggleFav={toggleFav} onBack={() => setSelectedAd(null)} ads={ads} onOpenAd={openAd} onDelete={canDeleteAd(selectedAd) ? deleteAd : null} />;
+    body = <AdDetailsScreen ad={selectedAd} isFav={favorites.has(selectedAd.id)} onToggleFav={toggleFav} onBack={() => setSelectedAd(null)} ads={ads} onOpenAd={openAd} onDelete={canDeleteAd(selectedAd) ? deleteAd : null} profile={profile} ownerId={ownerId} />;
   } else if (tab === "home") {
     body = <HomeScreen ads={ads} favorites={favorites} onToggleFav={toggleFav} onOpenAd={openAd} onSelectCategory={goSearch} onGoSearch={() => goSearch("all")} onGoAdd={goAdd} onOpenMenu={() => setTab("profile")} onOpenNotifs={() => setShowNotifs(true)} onOpenMessages={() => setTab("messages")} notifCount={unreadNotifs} msgCount={unreadMsgs} />;
   } else if (tab === "search") {
