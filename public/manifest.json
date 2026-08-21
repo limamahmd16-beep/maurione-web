@@ -1,0 +1,21 @@
+{
+  "name": "MauriOne",
+  "short_name": "MauriOne",
+  "description": "منصة موريتانية للإعلانات والخدمات",
+  "lang": "ar-MR",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07111F",
+  "theme_color": "#07111F",
+  "categories": ["shopping", "business", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
