@@ -4,36 +4,54 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>MauriOne - كل ما تحتاجه</title>
-  <meta name="description" content="تطبيق موريتاني شامل: وظائف، سيارات، عقارات، عيادات، هواتف، وخدمات منزلية" />
-
-  <!-- Tailwind (عبر CDN — يشغّل كل تنسيقات التطبيق) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- ===== إعدادات PWA ===== -->
-  <link rel="manifest" href="/manifest.json" />
+  <meta name="description" content="MauriOne منصة موريتانية للإعلانات والخدمات: وظائف، سيارات، عقارات، عيادات، هواتف وخدمات منزلية." />
   <meta name="theme-color" content="#07111F" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
 
-  <!-- إعدادات خاصة بـ iPhone / iPad -->
+  <link rel="canonical" href="https://maurione-web.vercel.app/" />
+
+  <!-- Open Graph / social sharing defaults. Individual ad pages can override these later. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="MauriOne" />
+  <meta property="og:title" content="MauriOne - كل ما تحتاجه" />
+  <meta property="og:description" content="منصة موريتانية للإعلانات والخدمات: وظائف، سيارات، عقارات، عيادات، هواتف وخدمات منزلية." />
+  <meta property="og:url" content="https://maurione-web.vercel.app/" />
+  <meta property="og:locale" content="ar_MR" />
+  <meta property="og:image" content="https://maurione-web.vercel.app/icons/icon.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="MauriOne - كل ما تحتاجه" />
+  <meta name="twitter:description" content="منصة موريتانية للإعلانات والخدمات." />
+  <meta name="twitter:image" content="https://maurione-web.vercel.app/icons/icon.svg" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MauriOne" />
-  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-  <link rel="icon" type="image/png" href="/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icons/icon.svg" />
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
+
+  <!-- Tailwind (CDN, kept to avoid changing the approved UI in this pass) -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     * { -webkit-tap-highlight-color: transparent; }
+    html, body, #root { min-height: 100%; }
     body { margin: 0; background: #000; }
   </style>
 </head>
 <body>
   <div id="root"></div>
+  <noscript>يلزم تفعيل JavaScript لاستخدام MauriOne.</noscript>
   <script type="module" src="/main.jsx"></script>
 
-  <!-- تفعيل الـ Service Worker (للتثبيت والعمل دون نت) -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
-        navigator.serviceWorker.register("/service-worker.js").catch(function () {});
+        navigator.serviceWorker.register("/service-worker.js").catch(function (error) {
+          console.warn("MauriOne service worker registration failed", error);
+        });
       });
     }
   </script>
