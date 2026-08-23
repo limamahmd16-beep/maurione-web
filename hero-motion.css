@@ -71,27 +71,11 @@
 }
 .hero-content::before{display:none!important}
 
-.hero-pill{
-  backdrop-filter:blur(12px)!important;
-  -webkit-backdrop-filter:blur(12px)!important;
-  background:rgba(10,20,33,.55)!important;
-  box-shadow:0 10px 32px rgba(0,0,0,.18)!important;
-}
-.hero h1{
-  max-width:720px!important;
-  margin-top:22px!important;
-  margin-bottom:18px!important;
-  font-size:clamp(44px,6vw,74px)!important;
-  line-height:.98!important;
-  letter-spacing:-.045em!important;
-  text-shadow:0 8px 36px rgba(0,0,0,.26)!important;
-}
-.hero p{
-  max-width:650px!important;
-  font-size:clamp(16px,1.7vw,20px)!important;
-  line-height:1.8!important;
-  color:rgba(255,255,255,.82)!important;
-  margin-bottom:28px!important;
+/* Current marketing copy intentionally removed before the new approved messaging */
+.hero-pill,
+.hero h1,
+.hero-content > p{
+  display:none!important;
 }
 
 /* Compact premium search surface */
@@ -104,6 +88,7 @@
   box-shadow:0 24px 70px rgba(0,0,0,.27),0 1px 0 rgba(255,255,255,.7) inset!important;
   backdrop-filter:blur(16px)!important;
   -webkit-backdrop-filter:blur(16px)!important;
+  animation:moHeroEnter .7s cubic-bezier(.2,.75,.25,1) both!important;
 }
 .search-panel input,
 .search-panel select,
@@ -119,14 +104,6 @@
   border-radius:13px!important;
   padding-inline:24px!important;
 }
-
-/* Elegant entrance only — no cartoon motion */
-.hero-pill,.hero h1,.hero p,.search-panel{
-  animation:moHeroEnter .7s cubic-bezier(.2,.75,.25,1) both!important;
-}
-.hero h1{animation-delay:.07s!important}
-.hero p{animation-delay:.14s!important}
-.search-panel{animation-delay:.21s!important}
 
 @keyframes moCinematicDrift{
   from{transform:scale(1.02) translate3d(0,0,0)}
@@ -155,23 +132,7 @@
   }
   .hero-content{
     width:calc(100% - 36px)!important;
-    padding:56px 0 48px!important;
-  }
-  .hero-pill{
-    font-size:13px!important;
-    padding:9px 13px!important;
-  }
-  .hero h1{
-    font-size:clamp(39px,12vw,58px)!important;
-    line-height:1.02!important;
-    margin:18px 0 14px!important;
-    max-width:100%!important;
-  }
-  .hero p{
-    font-size:15px!important;
-    line-height:1.75!important;
-    margin:0 0 22px!important;
-    max-width:95%!important;
+    padding:72px 0 54px!important;
   }
   .search-panel{
     padding:10px!important;
@@ -192,12 +153,10 @@
     background-size:145% auto!important;
     background-position:center 30%!important;
   }
-  .hero-content{width:calc(100% - 30px)!important;padding:48px 0 40px!important}
-  .hero h1{font-size:42px!important}
-  .hero p{font-size:14px!important;line-height:1.7!important}
+  .hero-content{width:calc(100% - 30px)!important;padding:64px 0 44px!important}
   .search-panel{border-radius:16px!important}
 }
 
 @media(prefers-reduced-motion:reduce){
-  .hero-bg,.hero::before,.hero-pill,.hero h1,.hero p,.search-panel{animation:none!important}
+  .hero-bg,.hero::before,.search-panel{animation:none!important}
 }
