@@ -1,128 +1,203 @@
-/* MauriOne cinematic hero motion — premium, subtle and mobile friendly */
-.hero{
-  min-height:620px!important;
-  isolation:isolate;
-}
-.hero-bg{
+/* MauriOne premium automotive hero — clean, cinematic, mobile first */
+
+/* Reliable header mark: crop the approved full logo to the M + car symbol */
+.brand-mark{
   overflow:hidden!important;
-  transform:scale(1.015);
-  animation:moHeroDrift 18s ease-in-out infinite alternate;
+  background-color:#fff!important;
+  background-image:url('/api/maurione-official-logo.png?v=12')!important;
+  background-repeat:no-repeat!important;
+  background-size:142% auto!important;
+  background-position:center 31%!important;
+  border:1px solid rgba(7,17,31,.08)!important;
 }
+
+.hero{
+  min-height:565px!important;
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  background:#07111f!important;
+}
+
+/* Real automotive photography with restrained cinematic motion */
+.hero-bg{
+  position:absolute!important;
+  inset:0!important;
+  overflow:hidden!important;
+  background:
+    linear-gradient(90deg,rgba(4,10,18,.96) 0%,rgba(4,10,18,.86) 43%,rgba(4,10,18,.48) 70%,rgba(4,10,18,.22) 100%),
+    linear-gradient(180deg,rgba(7,17,31,.05),rgba(7,17,31,.30)),
+    url("https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=2000&q=88") center 56%/cover no-repeat!important;
+  transform:scale(1.02)!important;
+  animation:moCinematicDrift 16s ease-in-out infinite alternate!important;
+}
+
+/* Remove the previous illustrated car and road completely */
+.hero-bg::before,
+.hero-bg::after{
+  content:none!important;
+  display:none!important;
+}
+
+/* Subtle premium light sweep */
+.hero::before{
+  content:""!important;
+  position:absolute!important;
+  inset:-30% -20%!important;
+  z-index:1!important;
+  pointer-events:none!important;
+  background:linear-gradient(112deg,transparent 34%,rgba(231,191,107,.06) 47%,rgba(255,255,255,.045) 50%,transparent 61%)!important;
+  transform:translateX(-35%)!important;
+  animation:moLightSweep 9s ease-in-out infinite!important;
+}
+.hero::after{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  height:1px!important;
+  z-index:3!important;
+  background:linear-gradient(90deg,transparent,rgba(201,151,62,.6),transparent)!important;
+  opacity:.7!important;
+}
+
 .hero-content{
   position:relative!important;
-  z-index:5!important;
+  z-index:4!important;
+  width:min(1180px,92%)!important;
+  margin:0 auto!important;
+  padding:74px 0 64px!important;
+}
+.hero-content::before{display:none!important}
+
+.hero-pill{
+  backdrop-filter:blur(12px)!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+  background:rgba(10,20,33,.55)!important;
+  box-shadow:0 10px 32px rgba(0,0,0,.18)!important;
+}
+.hero h1{
+  max-width:720px!important;
+  margin-top:22px!important;
+  margin-bottom:18px!important;
+  font-size:clamp(44px,6vw,74px)!important;
+  line-height:.98!important;
+  letter-spacing:-.045em!important;
+  text-shadow:0 8px 36px rgba(0,0,0,.26)!important;
+}
+.hero p{
+  max-width:650px!important;
+  font-size:clamp(16px,1.7vw,20px)!important;
+  line-height:1.8!important;
+  color:rgba(255,255,255,.82)!important;
+  margin-bottom:28px!important;
 }
 
-/* Animated road at the bottom of the hero */
-.hero-bg::before{
-  content:"";
-  position:absolute;
-  left:-10%;
-  right:-10%;
-  bottom:0;
-  height:118px;
-  pointer-events:none;
-  background:
-    repeating-linear-gradient(90deg,
-      transparent 0 72px,
-      rgba(231,191,107,.78) 72px 120px,
-      transparent 120px 192px
-    ) center 57px/192px 3px repeat-x,
-    linear-gradient(180deg,rgba(7,17,31,0) 0%,rgba(7,17,31,.2) 20%,rgba(5,10,17,.83) 48%,rgba(2,6,12,.98) 100%);
-  border-top:1px solid rgba(231,191,107,.16);
-  box-shadow:0 -22px 55px rgba(7,17,31,.22) inset;
-  animation:moRoadFlow 1.45s linear infinite;
-  z-index:2;
-}
-
-/* Sleek moving car, drawn as an embedded SVG so there is no extra asset to load */
-.hero-bg::after{
-  content:"";
-  position:absolute;
-  width:250px;
-  height:100px;
-  left:-310px;
-  bottom:45px;
-  pointer-events:none;
-  z-index:3;
-  opacity:.98;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 340 125'%3E%3Cpath d='M38 83h13l20-34c5-9 14-15 25-16h89c12 0 22 4 31 12l31 28 41 7c11 2 19 11 19 22v5H37c-9 0-16-7-16-16 0-4 2-7 5-8l12 0Z' fill='%2307111F' stroke='%23D7AB55' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M87 49h47v30H68l19-30Zm56 0h42c8 0 14 3 20 8l23 22h-85V49Z' fill='%23192E47' stroke='%23E7BF6B' stroke-width='2'/%3E%3Cpath d='M35 83h245' stroke='%23F2D389' stroke-width='3' stroke-linecap='round' opacity='.82'/%3E%3Cellipse cx='92' cy='101' rx='22' ry='22' fill='%23030A12' stroke='%23D7AB55' stroke-width='4'/%3E%3Cellipse cx='247' cy='101' rx='22' ry='22' fill='%23030A12' stroke='%23D7AB55' stroke-width='4'/%3E%3Ccircle cx='92' cy='101' r='8' fill='%23E7BF6B'/%3E%3Ccircle cx='247' cy='101' r='8' fill='%23E7BF6B'/%3E%3Cpath d='M289 80h20' stroke='%23FFF1B8' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-size:contain;
-  background-position:center;
-  background-repeat:no-repeat;
-  filter:drop-shadow(0 14px 16px rgba(0,0,0,.42)) drop-shadow(18px 0 28px rgba(231,191,107,.15));
-  animation:moDrive 11.5s cubic-bezier(.34,.05,.22,1) infinite;
-}
-
-/* Light sweep gives a more cinematic entrance without making the site look like a game */
-.hero-content::before{
-  content:"";
-  position:absolute;
-  width:360px;
-  height:360px;
-  inset-inline-start:-180px;
-  top:-100px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(231,191,107,.12),transparent 66%);
-  filter:blur(12px);
-  pointer-events:none;
-  z-index:-1;
-  animation:moPulse 5.5s ease-in-out infinite;
-}
-.hero-pill,
-.hero h1,
-.hero p,
+/* Compact premium search surface */
 .search-panel{
-  animation:moHeroIn .75s both;
+  max-width:980px!important;
+  padding:12px!important;
+  gap:10px!important;
+  border-radius:20px!important;
+  background:rgba(255,255,255,.96)!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.27),0 1px 0 rgba(255,255,255,.7) inset!important;
+  backdrop-filter:blur(16px)!important;
+  -webkit-backdrop-filter:blur(16px)!important;
 }
-.hero h1{animation-delay:.08s}
-.hero p{animation-delay:.16s}
-.search-panel{animation-delay:.24s}
+.search-panel input,
+.search-panel select,
+.search-input{
+  min-height:52px!important;
+}
+.search-panel input,
+.search-panel select{
+  border-radius:13px!important;
+}
+.search-panel .primary-btn{
+  min-height:52px!important;
+  border-radius:13px!important;
+  padding-inline:24px!important;
+}
 
-@keyframes moDrive{
-  0%{left:-310px;transform:translateY(2px) rotate(-.4deg);opacity:0}
-  5%{opacity:1}
-  46%{transform:translateY(-1px) rotate(.2deg)}
-  92%{opacity:1}
-  100%{left:calc(100% + 120px);transform:translateY(2px) rotate(-.2deg);opacity:0}
+/* Elegant entrance only — no cartoon motion */
+.hero-pill,.hero h1,.hero p,.search-panel{
+  animation:moHeroEnter .7s cubic-bezier(.2,.75,.25,1) both!important;
 }
-@keyframes moRoadFlow{
-  from{background-position:0 57px,0 0}
-  to{background-position:192px 57px,0 0}
+.hero h1{animation-delay:.07s!important}
+.hero p{animation-delay:.14s!important}
+.search-panel{animation-delay:.21s!important}
+
+@keyframes moCinematicDrift{
+  from{transform:scale(1.02) translate3d(0,0,0)}
+  to{transform:scale(1.065) translate3d(-.9%,.25%,0)}
 }
-@keyframes moHeroDrift{
-  from{transform:scale(1.015) translate3d(0,0,0)}
-  to{transform:scale(1.045) translate3d(-.6%,0,0)}
+@keyframes moLightSweep{
+  0%,18%{transform:translateX(-42%);opacity:0}
+  36%{opacity:1}
+  62%{transform:translateX(34%);opacity:.78}
+  78%,100%{transform:translateX(42%);opacity:0}
 }
-@keyframes moPulse{
-  0%,100%{opacity:.5;transform:scale(.92)}
-  50%{opacity:1;transform:scale(1.08)}
-}
-@keyframes moHeroIn{
-  from{opacity:0;transform:translateY(20px)}
+@keyframes moHeroEnter{
+  from{opacity:0;transform:translateY(16px)}
   to{opacity:1;transform:translateY(0)}
 }
 
 @media(max-width:760px){
-  .hero{min-height:665px!important}
-  .hero-bg::before{height:94px;background-position:center 46px,0 0}
-  .hero-bg::after{
-    width:190px;
-    height:78px;
-    bottom:34px;
-    animation-duration:9.5s;
+  .hero{
+    min-height:0!important;
   }
-  .hero-content{padding-bottom:92px!important}
+  .hero-bg{
+    background:
+      linear-gradient(180deg,rgba(4,10,18,.60) 0%,rgba(4,10,18,.84) 46%,rgba(4,10,18,.97) 100%),
+      url("https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1100&q=86") 58% center/cover no-repeat!important;
+    transform:scale(1.015)!important;
+  }
+  .hero-content{
+    width:calc(100% - 36px)!important;
+    padding:56px 0 48px!important;
+  }
+  .hero-pill{
+    font-size:13px!important;
+    padding:9px 13px!important;
+  }
+  .hero h1{
+    font-size:clamp(39px,12vw,58px)!important;
+    line-height:1.02!important;
+    margin:18px 0 14px!important;
+    max-width:100%!important;
+  }
+  .hero p{
+    font-size:15px!important;
+    line-height:1.75!important;
+    margin:0 0 22px!important;
+    max-width:95%!important;
+  }
+  .search-panel{
+    padding:10px!important;
+    gap:8px!important;
+    border-radius:18px!important;
+  }
+  .search-panel input,
+  .search-panel select,
+  .search-input,
+  .search-panel .primary-btn{
+    min-height:48px!important;
+  }
+  .search-panel .primary-btn{font-size:16px!important}
 }
 
 @media(max-width:420px){
-  .hero{min-height:690px!important}
-  .hero-bg::after{width:168px;height:70px;bottom:31px}
+  .brand-mark{
+    background-size:145% auto!important;
+    background-position:center 30%!important;
+  }
+  .hero-content{width:calc(100% - 30px)!important;padding:48px 0 40px!important}
+  .hero h1{font-size:42px!important}
+  .hero p{font-size:14px!important;line-height:1.7!important}
+  .search-panel{border-radius:16px!important}
 }
 
 @media(prefers-reduced-motion:reduce){
-  .hero-bg,.hero-bg::before,.hero-bg::after,.hero-content::before,.hero-pill,.hero h1,.hero p,.search-panel{
-    animation:none!important;
-  }
-  .hero-bg::after{left:calc(50% - 90px);opacity:.72}
+  .hero-bg,.hero::before,.hero-pill,.hero h1,.hero p,.search-panel{animation:none!important}
 }
