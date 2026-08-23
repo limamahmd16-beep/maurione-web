@@ -1,0 +1,17 @@
+{
+  "name": "MauriOne",
+  "short_name": "MauriOne",
+  "description": "سوق السيارات في موريتانيا",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#07111F",
+  "icons": [
+    {
+      "src": "/api/maurione-touch.png?v=3",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
