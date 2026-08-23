@@ -4,6 +4,7 @@ import MauriOneApp from "./MauriOne.jsx";
 import "./polish.css";
 import "./brand.css";
 import "./header-symbol-fix.css";
+import "./cars-premium.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
