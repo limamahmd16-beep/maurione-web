@@ -1,0 +1,193 @@
+/* Final MauriOne homepage layout guard — fixes mobile blank gap and forces search card visible */
+
+@media (max-width:760px){
+  .hero{
+    display:block!important;
+    height:auto!important;
+    min-height:0!important;
+    padding:0!important;
+    margin:0!important;
+    overflow:visible!important;
+    background:#fff!important;
+  }
+
+  .hero-bg{
+    position:relative!important;
+    inset:auto!important;
+    display:block!important;
+    width:100%!important;
+    height:220px!important;
+    min-height:220px!important;
+    margin:0!important;
+    transform:none!important;
+    animation:none!important;
+    opacity:1!important;
+    background:url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=90") center 58%/cover no-repeat!important;
+  }
+
+  .app[dir="rtl"] .hero-bg{
+    background:url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=90") center 58%/cover no-repeat!important;
+  }
+
+  .hero-content{
+    position:relative!important;
+    z-index:10!important;
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    color:#07111F!important;
+  }
+
+  .hero-pill,
+  .hero h1,
+  .hero-content>p{
+    display:none!important;
+  }
+
+  .search-panel{
+    position:relative!important;
+    z-index:20!important;
+    display:grid!important;
+    visibility:visible!important;
+    opacity:1!important;
+    transform:none!important;
+    animation:none!important;
+    width:calc(100% - 24px)!important;
+    max-width:none!important;
+    height:auto!important;
+    min-height:0!important;
+    margin:-28px 12px 18px!important;
+    padding:16px!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:10px!important;
+    background:#fff!important;
+    border:1px solid #E1E5E9!important;
+    border-radius:10px!important;
+    box-shadow:0 14px 34px rgba(7,17,31,.16)!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+
+  .search-panel::before{
+    content:"ابحث عن سيارتك"!important;
+    display:block!important;
+    grid-column:1/-1!important;
+    grid-row:1!important;
+    margin:0 0 2px!important;
+    color:#07111F!important;
+    font-size:22px!important;
+    line-height:1.25!important;
+    font-weight:950!important;
+    text-align:start!important;
+    opacity:1!important;
+    visibility:visible!important;
+  }
+
+  .search-panel::after{
+    content:"شراء سيارة"!important;
+    display:block!important;
+    grid-column:1/-1!important;
+    grid-row:2!important;
+    width:max-content!important;
+    margin:0 0 4px!important;
+    padding:0 0 7px!important;
+    border-bottom:3px solid #C9973E!important;
+    color:#07111F!important;
+    font-size:13px!important;
+    font-weight:900!important;
+    opacity:1!important;
+    visibility:visible!important;
+  }
+
+  .search-input{
+    grid-column:1/-1!important;
+    grid-row:3!important;
+    display:flex!important;
+    visibility:visible!important;
+    opacity:1!important;
+    width:100%!important;
+    min-height:50px!important;
+    padding:0 13px!important;
+    border:1px solid #CBD2DA!important;
+    border-radius:5px!important;
+    background:#fff!important;
+    color:#07111F!important;
+  }
+
+  .search-input input{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    width:100%!important;
+    color:#111827!important;
+    background:transparent!important;
+  }
+
+  .search-panel>select{
+    grid-column:1/2!important;
+    grid-row:4!important;
+  }
+
+  .search-panel>.price-filter{
+    grid-column:2/3!important;
+    grid-row:4!important;
+  }
+
+  .search-panel>select,
+  .search-panel>.price-filter{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    width:100%!important;
+    min-height:50px!important;
+    border:1px solid #CBD2DA!important;
+    border-radius:5px!important;
+    background:#fff!important;
+    color:#111827!important;
+    padding-inline:12px!important;
+  }
+
+  .search-panel>.primary-btn{
+    grid-column:1/-1!important;
+    grid-row:5!important;
+    display:flex!important;
+    visibility:visible!important;
+    opacity:1!important;
+    width:100%!important;
+    min-height:52px!important;
+    align-items:center!important;
+    justify-content:center!important;
+    border:0!important;
+    border-radius:999px!important;
+    background:linear-gradient(135deg,#C9973E,#E4B85D)!important;
+    color:#07111F!important;
+    font-size:16px!important;
+    font-weight:950!important;
+  }
+
+  .trust-strip{display:none!important}
+
+  #cars.section{
+    width:calc(100% - 24px)!important;
+    margin:0 auto!important;
+    padding:24px 0 58px!important;
+  }
+
+  #cars .section-title{
+    margin:0 0 18px!important;
+  }
+}
+
+@media (max-width:420px){
+  .hero-bg{height:200px!important;min-height:200px!important}
+  .search-panel{
+    width:calc(100% - 20px)!important;
+    margin:-24px 10px 16px!important;
+    padding:14px!important;
+  }
+  .search-panel::before{font-size:20px!important}
+  #cars.section{width:calc(100% - 20px)!important;padding-top:22px!important}
+}
