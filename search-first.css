@@ -1,0 +1,182 @@
+/* MauriOne — search-first automotive landing inspired by best-in-class marketplaces */
+:root{
+  --mo-navy:#07111F;
+  --mo-navy-2:#0D1B2A;
+  --mo-gold:#C9973E;
+  --mo-gold-soft:#E7BF6B;
+  --mo-bg:#F5F6F8;
+  --mo-line:#E4E7EC;
+}
+
+/* Keep the header compact and premium */
+.topbar{
+  height:70px!important;
+  background:rgba(255,255,255,.98)!important;
+  box-shadow:0 1px 0 rgba(7,17,31,.06)!important;
+}
+.topbar nav a{font-weight:750!important;color:#233044!important}
+.language-switch{border-color:#e6e8ec!important;background:#fff!important}
+
+/* Search-first hero: no oversized marketing copy, no cartoon animation */
+.hero{
+  min-height:320px!important;
+  background:linear-gradient(135deg,#081321 0%,#0D1B2A 58%,#142B42 100%)!important;
+  overflow:visible!important;
+  display:flex!important;
+  align-items:center!important;
+}
+.hero-bg{
+  inset:0!important;
+  opacity:.25!important;
+  background:
+    linear-gradient(90deg,rgba(7,17,31,.98),rgba(7,17,31,.68)),
+    url("https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1800&q=80") center 54%/cover no-repeat!important;
+  animation:none!important;
+  transform:none!important;
+}
+.hero::before,.hero::after{display:none!important}
+.hero-content{
+  width:min(1180px,calc(100% - 40px))!important;
+  padding:44px 0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.hero-pill,.hero h1,.hero p{display:none!important}
+
+/* Search card is the hero */
+.search-panel{
+  width:100%!important;
+  max-width:1100px!important;
+  margin:0!important;
+  padding:18px!important;
+  display:grid!important;
+  grid-template-columns:minmax(280px,1.8fr) minmax(170px,.8fr) minmax(160px,.72fr) auto!important;
+  gap:12px!important;
+  background:#fff!important;
+  border:1px solid rgba(255,255,255,.32)!important;
+  border-radius:22px!important;
+  box-shadow:0 26px 70px rgba(0,0,0,.28)!important;
+  position:relative!important;
+  animation:none!important;
+}
+.search-panel::before{
+  content:"ابحث عن سيارتك";
+  grid-column:1/-1;
+  display:block;
+  color:var(--mo-navy);
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:-.02em;
+  margin:0 2px 2px;
+  text-align:start;
+}
+.search-input,
+.search-panel input,
+.search-panel select,
+.search-panel .primary-btn{
+  min-height:54px!important;
+  border-radius:12px!important;
+}
+.search-input{
+  border:1px solid #D9DEE6!important;
+  background:#fff!important;
+  padding:0 14px!important;
+}
+.search-input:focus-within{border-color:rgba(201,151,62,.72)!important;box-shadow:0 0 0 3px rgba(201,151,62,.12)!important}
+.search-panel input,.search-panel select{
+  border:1px solid #D9DEE6!important;
+  background:#fff!important;
+  color:#111827!important;
+  padding-inline:14px!important;
+}
+.search-panel .primary-btn{
+  min-width:130px!important;
+  background:linear-gradient(135deg,#C9973E,#E0B45D)!important;
+  color:#081321!important;
+  font-weight:900!important;
+  border:0!important;
+  box-shadow:0 10px 24px rgba(201,151,62,.24)!important;
+}
+.search-panel .primary-btn:hover{transform:translateY(-1px)!important;filter:brightness(1.02)!important}
+
+/* Move useful content up immediately */
+.trust-strip{
+  margin-top:0!important;
+  border-radius:0!important;
+  border-inline:0!important;
+  background:#fff!important;
+  box-shadow:none!important;
+  border-bottom:1px solid #E8EBEF!important;
+}
+#cars.section{
+  padding-top:52px!important;
+}
+
+/* Cleaner listing rhythm */
+#cars .section-title{align-items:end!important}
+#cars .eyebrow{color:#A9792D!important;font-weight:900!important}
+.car-card{border-radius:20px!important}
+.car-image{aspect-ratio:4/3!important}
+.card-action{border-top:1px solid #EEF0F3!important}
+
+@media(max-width:900px){
+  .search-panel{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .search-panel::before{grid-column:1/-1}
+  .search-input{grid-column:1/-1!important}
+  .search-panel .primary-btn{grid-column:1/-1!important}
+}
+
+@media(max-width:760px){
+  .topbar{height:64px!important;padding-inline:14px!important}
+  .topbar nav{display:none!important}
+  .hero{
+    min-height:0!important;
+    background:linear-gradient(160deg,#07111F 0%,#0B1B2C 100%)!important;
+  }
+  .hero-bg{
+    opacity:.20!important;
+    background:
+      linear-gradient(180deg,rgba(7,17,31,.30),rgba(7,17,31,.90)),
+      url("https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1000&q=80") 58% center/cover no-repeat!important;
+  }
+  .hero-content{
+    width:calc(100% - 24px)!important;
+    padding:26px 0!important;
+  }
+  .search-panel{
+    grid-template-columns:1fr!important;
+    gap:9px!important;
+    padding:14px!important;
+    border-radius:18px!important;
+    box-shadow:0 20px 50px rgba(0,0,0,.24)!important;
+  }
+  .search-panel::before{
+    grid-column:1!important;
+    font-size:20px!important;
+    margin-bottom:2px!important;
+  }
+  .search-input,.search-panel select,.search-panel input,.search-panel .primary-btn{
+    grid-column:1!important;
+    width:100%!important;
+    min-height:49px!important;
+  }
+  .trust-strip{
+    overflow-x:auto!important;
+    justify-content:flex-start!important;
+    gap:18px!important;
+    padding:16px!important;
+    scrollbar-width:none!important;
+  }
+  .trust-strip::-webkit-scrollbar{display:none}
+  .trust-strip>div{min-width:220px!important;flex:0 0 auto!important}
+  #cars.section{padding-top:38px!important}
+}
+
+@media(max-width:420px){
+  .hero-content{width:calc(100% - 20px)!important;padding:22px 0!important}
+  .search-panel{padding:12px!important;border-radius:16px!important}
+  .search-panel::before{font-size:19px!important}
+}
