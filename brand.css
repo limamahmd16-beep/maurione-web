@@ -7,13 +7,13 @@
   --mauri-cream:#FBF8F1;
 }
 
-/* Official mark inside the site */
+/* Exact approved MauriOne logo */
 .brand-mark{
-  width:52px!important;
-  height:52px!important;
-  min-width:52px!important;
-  border-radius:15px!important;
-  background:#fff url('/apple-touch-icon.png?v=7') center top/150% auto no-repeat!important;
+  width:60px!important;
+  height:60px!important;
+  min-width:60px!important;
+  border-radius:16px!important;
+  background:#fff url('/api/maurione-official-logo.png?v=8') center/contain no-repeat!important;
   border:1px solid rgba(7,17,31,.08)!important;
   box-shadow:0 10px 28px rgba(7,17,31,.14)!important;
 }
@@ -112,16 +112,16 @@
 
 @media(max-width:760px){
   .topbar{
-    padding:10px 14px!important;
-    min-height:68px!important;
+    padding:9px 14px!important;
+    min-height:72px!important;
     gap:10px!important;
   }
   .topbar nav{display:none!important}
   .brand-mark{
-    width:46px!important;
-    height:46px!important;
-    min-width:46px!important;
-    border-radius:13px!important;
+    width:54px!important;
+    height:54px!important;
+    min-width:54px!important;
+    border-radius:14px!important;
   }
   .brand-lockup small{display:none!important}
   .brand-lockup strong{font-size:18px!important}
@@ -131,9 +131,9 @@
 
 @media(max-width:420px){
   .brand-mark{
-    width:42px!important;
-    height:42px!important;
-    min-width:42px!important;
+    width:50px!important;
+    height:50px!important;
+    min-width:50px!important;
   }
   .brand-lockup strong{font-size:17px!important}
 }
