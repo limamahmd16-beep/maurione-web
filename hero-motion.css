@@ -1,0 +1,128 @@
+/* MauriOne cinematic hero motion — premium, subtle and mobile friendly */
+.hero{
+  min-height:620px!important;
+  isolation:isolate;
+}
+.hero-bg{
+  overflow:hidden!important;
+  transform:scale(1.015);
+  animation:moHeroDrift 18s ease-in-out infinite alternate;
+}
+.hero-content{
+  position:relative!important;
+  z-index:5!important;
+}
+
+/* Animated road at the bottom of the hero */
+.hero-bg::before{
+  content:"";
+  position:absolute;
+  left:-10%;
+  right:-10%;
+  bottom:0;
+  height:118px;
+  pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0 72px,
+      rgba(231,191,107,.78) 72px 120px,
+      transparent 120px 192px
+    ) center 57px/192px 3px repeat-x,
+    linear-gradient(180deg,rgba(7,17,31,0) 0%,rgba(7,17,31,.2) 20%,rgba(5,10,17,.83) 48%,rgba(2,6,12,.98) 100%);
+  border-top:1px solid rgba(231,191,107,.16);
+  box-shadow:0 -22px 55px rgba(7,17,31,.22) inset;
+  animation:moRoadFlow 1.45s linear infinite;
+  z-index:2;
+}
+
+/* Sleek moving car, drawn as an embedded SVG so there is no extra asset to load */
+.hero-bg::after{
+  content:"";
+  position:absolute;
+  width:250px;
+  height:100px;
+  left:-310px;
+  bottom:45px;
+  pointer-events:none;
+  z-index:3;
+  opacity:.98;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 340 125'%3E%3Cpath d='M38 83h13l20-34c5-9 14-15 25-16h89c12 0 22 4 31 12l31 28 41 7c11 2 19 11 19 22v5H37c-9 0-16-7-16-16 0-4 2-7 5-8l12 0Z' fill='%2307111F' stroke='%23D7AB55' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M87 49h47v30H68l19-30Zm56 0h42c8 0 14 3 20 8l23 22h-85V49Z' fill='%23192E47' stroke='%23E7BF6B' stroke-width='2'/%3E%3Cpath d='M35 83h245' stroke='%23F2D389' stroke-width='3' stroke-linecap='round' opacity='.82'/%3E%3Cellipse cx='92' cy='101' rx='22' ry='22' fill='%23030A12' stroke='%23D7AB55' stroke-width='4'/%3E%3Cellipse cx='247' cy='101' rx='22' ry='22' fill='%23030A12' stroke='%23D7AB55' stroke-width='4'/%3E%3Ccircle cx='92' cy='101' r='8' fill='%23E7BF6B'/%3E%3Ccircle cx='247' cy='101' r='8' fill='%23E7BF6B'/%3E%3Cpath d='M289 80h20' stroke='%23FFF1B8' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size:contain;
+  background-position:center;
+  background-repeat:no-repeat;
+  filter:drop-shadow(0 14px 16px rgba(0,0,0,.42)) drop-shadow(18px 0 28px rgba(231,191,107,.15));
+  animation:moDrive 11.5s cubic-bezier(.34,.05,.22,1) infinite;
+}
+
+/* Light sweep gives a more cinematic entrance without making the site look like a game */
+.hero-content::before{
+  content:"";
+  position:absolute;
+  width:360px;
+  height:360px;
+  inset-inline-start:-180px;
+  top:-100px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(231,191,107,.12),transparent 66%);
+  filter:blur(12px);
+  pointer-events:none;
+  z-index:-1;
+  animation:moPulse 5.5s ease-in-out infinite;
+}
+.hero-pill,
+.hero h1,
+.hero p,
+.search-panel{
+  animation:moHeroIn .75s both;
+}
+.hero h1{animation-delay:.08s}
+.hero p{animation-delay:.16s}
+.search-panel{animation-delay:.24s}
+
+@keyframes moDrive{
+  0%{left:-310px;transform:translateY(2px) rotate(-.4deg);opacity:0}
+  5%{opacity:1}
+  46%{transform:translateY(-1px) rotate(.2deg)}
+  92%{opacity:1}
+  100%{left:calc(100% + 120px);transform:translateY(2px) rotate(-.2deg);opacity:0}
+}
+@keyframes moRoadFlow{
+  from{background-position:0 57px,0 0}
+  to{background-position:192px 57px,0 0}
+}
+@keyframes moHeroDrift{
+  from{transform:scale(1.015) translate3d(0,0,0)}
+  to{transform:scale(1.045) translate3d(-.6%,0,0)}
+}
+@keyframes moPulse{
+  0%,100%{opacity:.5;transform:scale(.92)}
+  50%{opacity:1;transform:scale(1.08)}
+}
+@keyframes moHeroIn{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+@media(max-width:760px){
+  .hero{min-height:665px!important}
+  .hero-bg::before{height:94px;background-position:center 46px,0 0}
+  .hero-bg::after{
+    width:190px;
+    height:78px;
+    bottom:34px;
+    animation-duration:9.5s;
+  }
+  .hero-content{padding-bottom:92px!important}
+}
+
+@media(max-width:420px){
+  .hero{min-height:690px!important}
+  .hero-bg::after{width:168px;height:70px;bottom:31px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .hero-bg,.hero-bg::before,.hero-bg::after,.hero-content::before,.hero-pill,.hero h1,.hero p,.search-panel{
+    animation:none!important;
+  }
+  .hero-bg::after{left:calc(50% - 90px);opacity:.72}
+}
