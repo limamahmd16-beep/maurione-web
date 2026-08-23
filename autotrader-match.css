@@ -1,0 +1,235 @@
+/* MauriOne — Auto Trader inspired marketplace layout, with MauriOne identity */
+:root{
+  --mo-navy:#07111F;
+  --mo-navy2:#0D1C2E;
+  --mo-gold:#C9973E;
+  --mo-gold2:#E4B85D;
+  --mo-page:#F5F6F7;
+  --mo-border:#DDE2E7;
+}
+
+body{background:var(--mo-page)!important}
+
+/* Header: clean marketplace navigation */
+.topbar{
+  height:72px!important;
+  padding-inline:clamp(16px,4vw,58px)!important;
+  background:#fff!important;
+  border-bottom:1px solid #E7E9EC!important;
+  box-shadow:none!important;
+}
+.topbar .brand-lockup small{display:none!important}
+.topbar .brand-lockup strong{font-size:23px!important;font-weight:900!important;color:var(--mo-navy)!important}
+.topbar nav{gap:30px!important}
+.topbar nav a{font-size:14px!important;font-weight:800!important;color:#252D38!important}
+.language-switch{border:0!important;background:#F5F6F7!important;border-radius:999px!important;padding:9px 13px!important}
+
+/* Full-width automotive banner */
+.hero{
+  min-height:455px!important;
+  display:block!important;
+  position:relative!important;
+  overflow:hidden!important;
+  background:#E9EDF1!important;
+}
+.hero-bg{
+  position:absolute!important;
+  inset:0!important;
+  opacity:1!important;
+  transform:none!important;
+  animation:none!important;
+  background:
+    linear-gradient(90deg,rgba(245,248,250,.02) 0%,rgba(245,248,250,.02) 45%,rgba(7,17,31,.08) 100%),
+    url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2000&q=90") center 57%/cover no-repeat!important;
+}
+.app[dir="rtl"] .hero-bg{
+  background:
+    linear-gradient(270deg,rgba(245,248,250,.02) 0%,rgba(245,248,250,.02) 45%,rgba(7,17,31,.08) 100%),
+    url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2000&q=90") center 57%/cover no-repeat!important;
+}
+.hero::before,.hero::after,.hero-bg::before,.hero-bg::after{display:none!important;content:none!important}
+
+.hero-content{
+  position:relative!important;
+  z-index:3!important;
+  width:min(1180px,calc(100% - 40px))!important;
+  min-height:455px!important;
+  margin:auto!important;
+  padding:36px 0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+}
+.app[dir="rtl"] .hero-content{justify-content:flex-end!important}
+.hero-pill,.hero h1,.hero p{display:none!important}
+
+/* Search card — same visual logic as leading vehicle marketplaces */
+.search-panel{
+  width:390px!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:18px!important;
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:11px!important;
+  border-radius:6px!important;
+  background:#fff!important;
+  border:1px solid rgba(7,17,31,.10)!important;
+  box-shadow:0 18px 42px rgba(7,17,31,.18)!important;
+  backdrop-filter:none!important;
+  animation:none!important;
+}
+.search-panel::before{
+  content:"ابحث عن سيارتك"!important;
+  grid-column:1/-1!important;
+  display:block!important;
+  color:var(--mo-navy)!important;
+  font-size:24px!important;
+  font-weight:950!important;
+  line-height:1.2!important;
+  margin:0 0 5px!important;
+  text-align:start!important;
+  letter-spacing:-.03em!important;
+}
+.search-panel::after{
+  content:"شراء سيارة"!important;
+  grid-column:1/-1!important;
+  grid-row:2!important;
+  display:flex!important;
+  align-items:center!important;
+  width:max-content!important;
+  min-height:34px!important;
+  padding:0 13px!important;
+  border-bottom:3px solid var(--mo-gold)!important;
+  color:var(--mo-navy)!important;
+  font-size:13px!important;
+  font-weight:900!important;
+  margin-bottom:2px!important;
+}
+.search-input{
+  grid-column:1/-1!important;
+  grid-row:3!important;
+  min-height:50px!important;
+  border:1px solid #CBD2DA!important;
+  border-radius:4px!important;
+  background:#fff!important;
+  padding-inline:13px!important;
+  box-shadow:none!important;
+}
+.search-input input{font-size:14px!important}
+.search-panel>select{
+  grid-column:1/2!important;
+  grid-row:4!important;
+}
+.search-panel>.price-filter{
+  grid-column:2/3!important;
+  grid-row:4!important;
+}
+.search-panel>select,.search-panel>.price-filter{
+  width:100%!important;
+  min-height:50px!important;
+  border:1px solid #CBD2DA!important;
+  border-radius:4px!important;
+  background:#fff!important;
+  padding-inline:12px!important;
+  color:#171C23!important;
+}
+.search-panel>.primary-btn{
+  grid-column:1/-1!important;
+  grid-row:5!important;
+  min-height:52px!important;
+  border-radius:999px!important;
+  border:0!important;
+  background:linear-gradient(135deg,var(--mo-gold),var(--mo-gold2))!important;
+  color:#07111F!important;
+  font-weight:950!important;
+  font-size:16px!important;
+  box-shadow:none!important;
+  justify-content:center!important;
+}
+.search-panel>.primary-btn:hover{transform:none!important;filter:brightness(1.03)!important}
+
+/* Immediately show inventory after the hero */
+.trust-strip{display:none!important}
+#cars.section{
+  width:min(1180px,calc(100% - 40px))!important;
+  padding:46px 0 80px!important;
+  background:transparent!important;
+}
+#cars .section-title{margin-bottom:24px!important}
+#cars .section-title h2{font-size:32px!important;font-weight:900!important;color:var(--mo-navy)!important}
+#cars .eyebrow{display:none!important}
+.car-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:18px!important}
+.car-card{
+  border-radius:8px!important;
+  border:1px solid #E1E5E9!important;
+  box-shadow:0 2px 8px rgba(7,17,31,.05)!important;
+  background:#fff!important;
+}
+.car-card:hover{transform:translateY(-2px)!important;box-shadow:0 8px 24px rgba(7,17,31,.10)!important}
+.car-image{aspect-ratio:16/10!important}
+.car-body{padding:15px 16px 16px!important}
+.car-body h3{font-size:18px!important;margin:8px 0!important}
+.price{font-size:22px!important;color:var(--mo-navy)!important}
+.card-action{color:var(--mo-navy)!important;font-weight:850!important}
+
+/* Secondary explanation stays simple */
+.how{margin-top:0!important;background:#fff!important;border-top:1px solid #E5E8EC!important}
+
+@media(max-width:900px){
+  .hero{min-height:420px!important}
+  .hero-content{min-height:420px!important}
+  .search-panel{width:360px!important}
+  .car-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+
+@media(max-width:760px){
+  .topbar{height:64px!important;padding-inline:12px!important}
+  .topbar nav{display:none!important}
+  .topbar .brand-lockup strong{font-size:20px!important}
+  .brand-mark{width:44px!important;height:44px!important;border-radius:11px!important}
+
+  .hero{
+    min-height:0!important;
+    background:#fff!important;
+    padding:0!important;
+  }
+  .hero-bg{
+    position:relative!important;
+    display:block!important;
+    height:205px!important;
+    inset:auto!important;
+    background:url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1000&q=88") center 58%/cover no-repeat!important;
+  }
+  .app[dir="rtl"] .hero-bg{background:url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1000&q=88") center 58%/cover no-repeat!important}
+  .hero-content{
+    width:100%!important;
+    min-height:0!important;
+    padding:0 14px 22px!important;
+    margin-top:-26px!important;
+    display:block!important;
+  }
+  .search-panel{
+    width:100%!important;
+    padding:16px!important;
+    gap:10px!important;
+    border-radius:7px!important;
+    box-shadow:0 10px 30px rgba(7,17,31,.14)!important;
+  }
+  .search-panel::before{font-size:22px!important}
+  .search-input{min-height:48px!important}
+  .search-panel>select,.search-panel>.price-filter{min-height:48px!important}
+  .search-panel>.primary-btn{min-height:50px!important}
+
+  #cars.section{width:calc(100% - 24px)!important;padding:30px 0 58px!important}
+  #cars .section-title h2{font-size:26px!important}
+  .car-grid{grid-template-columns:1fr!important;gap:15px!important}
+  .car-card{border-radius:8px!important}
+}
+
+@media(max-width:420px){
+  .hero-bg{height:185px!important}
+  .hero-content{padding-inline:10px!important;margin-top:-22px!important}
+  .search-panel{padding:14px!important}
+  .search-panel::before{font-size:20px!important}
+}
