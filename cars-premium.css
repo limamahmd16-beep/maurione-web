@@ -1,0 +1,492 @@
+/* Premium vehicle cards + details experience for MauriOne */
+:root{
+  --mo-navy:#07111F;
+  --mo-navy-soft:#11243B;
+  --mo-gold:#C9973E;
+  --mo-gold-light:#E8C574;
+  --mo-line:rgba(7,17,31,.09);
+  --mo-muted:#6B7280;
+  --mo-surface:#FFFFFF;
+}
+
+/* Listings section */
+#cars.section{
+  padding-top:72px!important;
+  padding-bottom:92px!important;
+  background:
+    radial-gradient(circle at 8% 6%,rgba(201,151,62,.055),transparent 24%),
+    linear-gradient(180deg,#fff 0%,#f7f8fa 100%)!important;
+}
+#cars .section-title{
+  margin-bottom:28px!important;
+}
+#cars .section-title h2{
+  font-size:clamp(30px,4vw,46px)!important;
+  letter-spacing:-.035em!important;
+  line-height:1.05!important;
+}
+#cars .count{
+  min-width:42px!important;
+  height:42px!important;
+  display:grid!important;
+  place-items:center!important;
+  border-radius:999px!important;
+  background:#fff!important;
+  border:1px solid var(--mo-line)!important;
+  color:var(--mo-navy)!important;
+  box-shadow:0 8px 24px rgba(7,17,31,.07)!important;
+}
+
+.car-grid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:26px!important;
+  align-items:stretch!important;
+}
+.car-card{
+  position:relative!important;
+  overflow:hidden!important;
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  background:#fff!important;
+  border:1px solid rgba(7,17,31,.075)!important;
+  border-radius:26px!important;
+  box-shadow:0 14px 45px rgba(7,17,31,.075)!important;
+  cursor:pointer!important;
+  isolation:isolate!important;
+  transition:transform .28s cubic-bezier(.2,.75,.2,1),box-shadow .28s ease,border-color .28s ease!important;
+}
+.car-card:hover{
+  transform:translateY(-7px)!important;
+  border-color:rgba(201,151,62,.34)!important;
+  box-shadow:0 28px 70px rgba(7,17,31,.14)!important;
+}
+.car-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius:inherit;
+  box-shadow:inset 0 1px rgba(255,255,255,.78);
+  z-index:3;
+}
+.car-image{
+  position:relative!important;
+  aspect-ratio:16/10!important;
+  overflow:hidden!important;
+  background:#e9edf2!important;
+}
+.car-image img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  display:block!important;
+  transition:transform .55s cubic-bezier(.2,.7,.2,1),filter .3s ease!important;
+}
+.car-card:hover .car-image img{
+  transform:scale(1.045)!important;
+  filter:saturate(1.03) contrast(1.015)!important;
+}
+.car-image::after{
+  content:"";
+  position:absolute;
+  inset:48% 0 0;
+  pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(5,12,22,.36));
+}
+.featured,.demo{
+  top:16px!important;
+  z-index:4!important;
+  min-height:32px!important;
+  padding:7px 11px!important;
+  border-radius:999px!important;
+  backdrop-filter:blur(12px)!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+  box-shadow:0 8px 26px rgba(0,0,0,.14)!important;
+}
+.featured{
+  background:rgba(7,17,31,.88)!important;
+  color:#fff!important;
+  border:1px solid rgba(232,197,116,.35)!important;
+}
+.featured svg{color:var(--mo-gold-light)!important}
+.demo{
+  background:rgba(255,255,255,.9)!important;
+  color:var(--mo-navy)!important;
+}
+.car-body{
+  display:flex!important;
+  flex:1!important;
+  flex-direction:column!important;
+  padding:21px 21px 19px!important;
+}
+.card-topline{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  margin-bottom:11px!important;
+}
+.ref{
+  display:inline-flex!important;
+  align-items:center!important;
+  padding:6px 9px!important;
+  border-radius:9px!important;
+  background:#fbf5e8!important;
+  border:1px solid rgba(201,151,62,.15)!important;
+  color:#7d5a1f!important;
+  font-size:11px!important;
+  font-weight:850!important;
+  letter-spacing:.035em!important;
+}
+.location{
+  display:flex!important;
+  align-items:center!important;
+  gap:4px!important;
+  color:#7a8391!important;
+  font-size:12px!important;
+  font-weight:650!important;
+}
+.location svg{color:var(--mo-gold)!important}
+.car-body h3{
+  margin:0 0 9px!important;
+  color:var(--mo-navy)!important;
+  font-size:clamp(19px,1.75vw,23px)!important;
+  line-height:1.22!important;
+  letter-spacing:-.025em!important;
+}
+.price{
+  margin-bottom:17px!important;
+  color:var(--mo-navy)!important;
+  font-size:27px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  letter-spacing:-.035em!important;
+}
+.price small{
+  color:#9a7130!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  letter-spacing:.03em!important;
+}
+.spec-row{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+  margin-top:auto!important;
+  margin-bottom:18px!important;
+}
+.info-chip{
+  min-width:0!important;
+  min-height:52px!important;
+  padding:9px 7px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:5px!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  text-overflow:ellipsis!important;
+  border-radius:13px!important;
+  background:#f7f8fa!important;
+  border:1px solid rgba(7,17,31,.055)!important;
+  color:#3e4856!important;
+  font-size:11px!important;
+  font-weight:750!important;
+}
+.info-chip svg{
+  flex:none!important;
+  color:#936b2b!important;
+}
+.card-action{
+  width:100%!important;
+  min-height:48px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  padding:0 16px!important;
+  border:1px solid rgba(7,17,31,.08)!important;
+  border-radius:14px!important;
+  background:linear-gradient(180deg,#fff,#fafbfc)!important;
+  color:var(--mo-navy)!important;
+  font-size:13px!important;
+  font-weight:850!important;
+  transition:background .2s ease,color .2s ease,border-color .2s ease!important;
+}
+.car-card:hover .card-action{
+  background:var(--mo-navy)!important;
+  color:#fff!important;
+  border-color:var(--mo-navy)!important;
+}
+.car-card:hover .card-action .direction-icon{color:var(--mo-gold-light)!important}
+
+/* Vehicle details behaves like a premium detail page */
+.modal-backdrop{
+  padding:30px!important;
+  align-items:center!important;
+  background:rgba(3,8,15,.76)!important;
+  backdrop-filter:blur(14px)!important;
+  -webkit-backdrop-filter:blur(14px)!important;
+  z-index:120!important;
+}
+.modal{
+  width:min(1120px,96vw)!important;
+  max-height:min(880px,92vh)!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1.18fr) minmax(360px,.82fr)!important;
+  overflow:hidden!important;
+  border-radius:30px!important;
+  background:#fff!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  box-shadow:0 35px 110px rgba(0,0,0,.36)!important;
+}
+.modal>.close{
+  position:absolute!important;
+  top:17px!important;
+  inset-inline-end:17px!important;
+  z-index:10!important;
+  width:43px!important;
+  height:43px!important;
+  border:1px solid rgba(255,255,255,.3)!important;
+  border-radius:999px!important;
+  background:rgba(7,17,31,.68)!important;
+  color:#fff!important;
+  display:grid!important;
+  place-items:center!important;
+  backdrop-filter:blur(12px)!important;
+  box-shadow:0 8px 25px rgba(0,0,0,.18)!important;
+}
+.modal-image{
+  min-height:100%!important;
+  position:relative!important;
+  overflow:hidden!important;
+  background:#e9edf2!important;
+}
+.modal-image img{
+  width:100%!important;
+  height:100%!important;
+  min-height:610px!important;
+  object-fit:cover!important;
+  display:block!important;
+}
+.modal-image::after{
+  content:"";
+  position:absolute;
+  inset:60% 0 0;
+  pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(5,12,22,.18));
+}
+.modal-body{
+  min-width:0!important;
+  overflow:auto!important;
+  padding:36px 32px 30px!important;
+  background:
+    radial-gradient(circle at 100% 0,rgba(201,151,62,.075),transparent 28%),
+    #fff!important;
+}
+.modal-body .card-topline{margin-bottom:16px!important}
+.modal-body h2{
+  margin:0 0 12px!important;
+  color:var(--mo-navy)!important;
+  font-size:clamp(30px,3vw,42px)!important;
+  line-height:1.08!important;
+  letter-spacing:-.04em!important;
+}
+.modal-price{
+  padding-bottom:22px!important;
+  margin-bottom:22px!important;
+  border-bottom:1px solid var(--mo-line)!important;
+  color:var(--mo-navy)!important;
+  font-size:34px!important;
+  font-weight:950!important;
+  letter-spacing:-.045em!important;
+}
+.modal-price small{
+  color:#9a7130!important;
+  font-size:13px!important;
+  letter-spacing:.04em!important;
+}
+.details-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px!important;
+}
+.detail{
+  min-width:0!important;
+  min-height:74px!important;
+  padding:13px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:11px!important;
+  border-radius:15px!important;
+  background:#f7f8fa!important;
+  border:1px solid rgba(7,17,31,.055)!important;
+}
+.detail>svg{
+  flex:none!important;
+  width:36px!important;
+  height:36px!important;
+  padding:8px!important;
+  border-radius:11px!important;
+  background:#fff!important;
+  color:#916826!important;
+  box-shadow:0 4px 14px rgba(7,17,31,.055)!important;
+}
+.detail span{min-width:0!important}
+.detail small{
+  display:block!important;
+  margin-bottom:3px!important;
+  color:#8a929d!important;
+  font-size:10px!important;
+  font-weight:700!important;
+}
+.detail strong{
+  display:block!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+  color:#1d2939!important;
+  font-size:13px!important;
+  font-weight:850!important;
+}
+.description{
+  margin:20px 0!important;
+  padding:17px 18px!important;
+  border-inline-start:3px solid var(--mo-gold)!important;
+  border-radius:0 14px 14px 0!important;
+  background:#fbfaf7!important;
+  color:#515a67!important;
+  font-size:14px!important;
+  line-height:1.85!important;
+}
+[dir="rtl"] .description{
+  border-radius:14px 0 0 14px!important;
+}
+.whatsapp{
+  width:100%!important;
+  min-height:56px!important;
+  margin-top:6px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:10px!important;
+  border:0!important;
+  border-radius:16px!important;
+  background:linear-gradient(135deg,#0c6f4e,#13865f)!important;
+  color:#fff!important;
+  font-weight:900!important;
+  box-shadow:0 14px 34px rgba(12,111,78,.22)!important;
+  cursor:pointer!important;
+}
+.whatsapp:active{transform:translateY(1px)!important}
+
+/* Tablet */
+@media(max-width:1020px){
+  .car-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .modal{
+    grid-template-columns:1fr 390px!important;
+    width:min(960px,96vw)!important;
+  }
+  .modal-image img{min-height:560px!important}
+}
+
+/* Mobile: cards remain image-first, detail modal becomes a real full-screen vehicle page */
+@media(max-width:680px){
+  #cars.section{
+    padding-top:52px!important;
+    padding-bottom:68px!important;
+  }
+  #cars .section-title{margin-bottom:19px!important}
+  #cars .section-title h2{font-size:31px!important}
+  .car-grid{
+    grid-template-columns:1fr!important;
+    gap:18px!important;
+  }
+  .car-card{
+    border-radius:22px!important;
+    box-shadow:0 12px 34px rgba(7,17,31,.08)!important;
+  }
+  .car-card:hover{transform:none!important}
+  .car-image{aspect-ratio:16/10.2!important}
+  .car-body{padding:18px 17px 17px!important}
+  .car-body h3{font-size:21px!important}
+  .price{font-size:26px!important}
+  .info-chip{min-height:50px!important}
+
+  .modal-backdrop{
+    padding:0!important;
+    align-items:stretch!important;
+    background:#fff!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+  .modal{
+    width:100%!important;
+    max-width:none!important;
+    height:100dvh!important;
+    max-height:none!important;
+    display:block!important;
+    overflow:auto!important;
+    border-radius:0!important;
+    border:0!important;
+    box-shadow:none!important;
+    background:#fff!important;
+  }
+  .modal>.close{
+    position:fixed!important;
+    top:max(14px,env(safe-area-inset-top))!important;
+    inset-inline-end:14px!important;
+    z-index:140!important;
+    width:44px!important;
+    height:44px!important;
+  }
+  .modal-image{
+    width:100%!important;
+    min-height:0!important;
+    height:43vh!important;
+    max-height:390px!important;
+    border-radius:0 0 26px 26px!important;
+  }
+  .modal-image img{
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+  }
+  .modal-image .featured{
+    top:auto!important;
+    bottom:16px!important;
+    inset-inline-start:16px!important;
+  }
+  .modal-body{
+    overflow:visible!important;
+    padding:23px 17px calc(28px + env(safe-area-inset-bottom))!important;
+  }
+  .modal-body h2{font-size:30px!important}
+  .modal-price{
+    font-size:30px!important;
+    margin-bottom:18px!important;
+    padding-bottom:18px!important;
+  }
+  .details-grid{gap:8px!important}
+  .detail{min-height:70px!important;padding:11px!important}
+  .detail>svg{width:34px!important;height:34px!important}
+  .description{font-size:13px!important;margin:17px 0!important}
+  .whatsapp{
+    position:sticky!important;
+    bottom:calc(10px + env(safe-area-inset-bottom))!important;
+    z-index:12!important;
+    min-height:58px!important;
+    box-shadow:0 16px 36px rgba(12,111,78,.28)!important;
+  }
+}
+
+@media(max-width:390px){
+  .spec-row{gap:6px!important}
+  .info-chip{font-size:10px!important}
+  .details-grid{grid-template-columns:1fr 1fr!important}
+  .detail{gap:8px!important}
+  .detail strong{font-size:12px!important}
+}
