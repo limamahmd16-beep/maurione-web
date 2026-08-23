@@ -8,7 +8,7 @@
   "theme_color": "#07111F",
   "icons": [
     {
-      "src": "/api/maurione-icon-v4.png",
+      "src": "https://maurione-web.vercel.app/api/maurione-public-icon.js?v=5",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
