@@ -8,6 +8,7 @@ import "./cars-premium.css";
 import "./hero-motion.css";
 import "./search-first.css";
 import "./autotrader-match.css";
+import "./mobile-layout-fix.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
