@@ -8,7 +8,7 @@
   "theme_color": "#07111F",
   "icons": [
     {
-      "src": "/api/maurione-touch.png?v=3",
+      "src": "/api/maurione-icon-v4.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
