@@ -1,0 +1,212 @@
+/* MauriOne visual polish — presentation only */
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  overscroll-behavior-y: none;
+}
+
+button, a, input, textarea, select {
+  font: inherit;
+}
+
+button, a, [role="button"] {
+  touch-action: manipulation;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid rgba(25, 201, 138, .85);
+  outline-offset: 2px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: .72;
+}
+
+img {
+  display: block;
+  background: rgba(148,163,184,.08);
+}
+
+button img,
+.mo-search-grid img,
+.mo-fav-grid img,
+.mo-ad-rows img {
+  transition: transform .28s ease, filter .28s ease;
+}
+
+button:hover img,
+.mo-search-grid button:hover img,
+.mo-fav-grid button:hover img {
+  transform: scale(1.025);
+}
+
+/* App frame */
+.mo-frame {
+  isolation: isolate;
+  position: relative;
+  box-shadow: 0 0 0 1px rgba(148,163,184,.08), 0 28px 80px rgba(0,0,0,.16);
+}
+
+/* Premium surface treatment without changing component layout */
+.mo-frame > div,
+.mo-frame section {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.mo-frame .rounded-2xl,
+.mo-frame .rounded-xl {
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease, background-color .18s ease;
+}
+
+.mo-frame button.rounded-2xl:hover,
+.mo-frame button.rounded-xl:hover {
+  box-shadow: 0 10px 28px rgba(0,0,0,.10);
+}
+
+/* Consistent icon language */
+.mo-frame svg {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: 0 0 auto;
+}
+
+.mo-frame button svg {
+  transition: transform .16s ease, opacity .16s ease;
+}
+
+.mo-frame button:hover > svg,
+.mo-frame button:hover span > svg {
+  transform: translateY(-1px);
+}
+
+/* Search and form fields */
+.mo-frame input,
+.mo-frame textarea,
+.mo-frame select {
+  min-height: 42px;
+  border-radius: 12px;
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+
+.mo-frame input:focus,
+.mo-frame textarea:focus,
+.mo-frame select:focus {
+  border-color: rgba(25,201,138,.72) !important;
+  box-shadow: 0 0 0 3px rgba(25,201,138,.10);
+}
+
+/* Category area */
+.mo-cat-grid button {
+  min-width: 0;
+}
+
+.mo-cat-grid button > div {
+  transform: translateZ(0);
+}
+
+.mo-cat-grid button:hover > div {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(25,201,138,.14) !important;
+}
+
+/* Listing cards */
+.mo-search-grid > button,
+.mo-fav-grid > button {
+  box-shadow: 0 8px 24px rgba(0,0,0,.06);
+}
+
+.mo-search-grid > button:hover,
+.mo-fav-grid > button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(0,0,0,.10);
+}
+
+.mo-ad-rows > button {
+  border-radius: 16px;
+  padding-inline: 10px;
+  margin-bottom: 6px;
+}
+
+.mo-ad-rows > button:hover {
+  transform: translateY(-1px);
+}
+
+/* Bottom navigation: app-like floating glass bar */
+.mo-nav {
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  box-shadow: 0 -12px 30px rgba(0,0,0,.10);
+}
+
+.mo-nav > button:not(:nth-child(3)) {
+  min-width: 56px;
+  min-height: 48px;
+  border-radius: 14px;
+}
+
+.mo-nav > button:nth-child(3) {
+  border: 1px solid rgba(255,255,255,.28);
+}
+
+/* Improve touch targets in compact icon buttons */
+.mo-frame button.w-9.h-9,
+.mo-frame button.w-8.h-8 {
+  min-width: 40px;
+  min-height: 40px;
+}
+
+/* Better density on wide displays while preserving the existing breakpoints */
+@media (min-width: 700px) {
+  .mo-frame {
+    border-radius: 22px;
+    overflow: clip;
+    margin-block: 18px;
+    min-height: calc(100vh - 36px) !important;
+  }
+
+  .mo-search-grid,
+  .mo-fav-grid,
+  .mo-ad-rows {
+    gap: 14px !important;
+  }
+}
+
+@media (min-width: 1000px) {
+  .mo-frame {
+    border-radius: 26px;
+    margin-block: 24px;
+    min-height: calc(100vh - 48px) !important;
+  }
+}
+
+/* Keep motion refined and accessible */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
