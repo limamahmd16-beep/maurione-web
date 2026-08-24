@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>MauriOne Admin Access</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 0,#182238,#080d17 55%,#03060a);font-family:Arial,Tahoma,sans-serif;color:#fff;display:flex;align-items:center;justify-content:center;padding:22px}.card{width:min(100%,430px);background:#0d1422;border:1px solid rgba(205,158,58,.35);border-radius:24px;padding:28px;box-shadow:0 30px 80px rgba(0,0,0,.4)}.brand{text-align:center;font-size:28px;font-weight:800;margin-bottom:8px}.brand span{color:#d1a447}.badge{width:max-content;margin:18px auto;color:#ddb354;border:1px solid rgba(205,158,58,.35);border-radius:999px;padding:7px 11px;font-size:12px}h1{text-align:center;font-size:24px;margin:12px 0 7px}p{text-align:center;color:#9ca6b7;font-size:13px;line-height:1.7}.field{margin-top:14px}label{display:block;color:#b3bdcb;font-size:12px;margin-bottom:6px}input{width:100%;height:48px;border-radius:12px;border:1px solid #2a3548;background:#0a101b;color:#fff;padding:0 13px;font:inherit;outline:none}input:focus{border-color:#c99a39;box-shadow:0 0 0 3px rgba(201,154,57,.12)}button{width:100%;height:48px;border:0;border-radius:12px;margin-top:18px;background:linear-gradient(135deg,#e6bc56,#bd8226);font:inherit;font-weight:800;color:#111;cursor:pointer}.msg{margin-top:12px;border-radius:10px;padding:10px;font-size:12px;line-height:1.6;display:none}.err{display:block;background:#35191c;color:#ffc0bc;border:1px solid #643034}.ok{display:block;background:#153020;color:#b9e8c9;border:1px solid #2e6842}.small{font-size:11px;color:#7f8999;margin-top:16px;text-align:center}</style>
+</head>
+<body>
+  <main class="card">
+    <div class="brand">Mauri<span>One</span></div>
+    <div class="badge">دخول الإدارة الآمن</div>
+    <h1>لوحة التحكم الكاملة</h1>
+    <p>استخدم بريد الإدارة ورمز الدخول الخاص. لا يعتمد هذا المسار على نافذة Google.</p>
+    <div class="field"><label>بريد الإدارة</label><input id="email" type="email" value="limamahmd16@gmail.com" /></div>
+    <div class="field"><label>رمز الإدارة</label><input id="code" type="password" autocomplete="one-time-code" /></div>
+    <div id="msg" class="msg"></div>
+    <button id="login">دخول لوحة التحكم</button>
+    <div class="small">MauriOne · Admin</div>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const app = initializeApp({
+      apiKey:"AIzaSyBZesOt5_hf4GGbe3PDTF34HZJFa2ukBlQ",
+      authDomain:"maurione-cefcd.firebaseapp.com",
+      projectId:"maurione-cefcd",
+      storageBucket:"maurione-cefcd.firebasestorage.app",
+      messagingSenderId:"173408548887",
+      appId:"1:173408548887:web:b174898b8abef3cd870452"
+    });
+    const auth = getAuth(app);
+    const btn = document.getElementById("login");
+    const msg = document.getElementById("msg");
+    const show=(text,ok=false)=>{msg.textContent=text;msg.className=`msg ${ok?"ok":"err"}`};
+
+    btn.addEventListener("click", async()=>{
+      btn.disabled=true;btn.textContent="جارٍ التحقق...";msg.className="msg";
+      try{
+        const res=await fetch("/api/admin?action=bootstrapLogin",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:document.getElementById("email").value.trim(),code:document.getElementById("code").value})});
+        const data=await res.json();
+        if(!res.ok) throw new Error(data.error||"LOGIN_FAILED");
+        await signInWithCustomToken(auth,data.token);
+        show("تم التحقق. جارٍ فتح لوحة التحكم...",true);
+        setTimeout(()=>location.href="/admin",400);
+      }catch(e){
+        const map={ADMIN_FIREBASE_NOT_CONFIGURED:"خادم الإدارة لم يُربط بعد بـ Firebase Admin.",ADMIN_BOOTSTRAP_NOT_CONFIGURED:"رمز الإدارة لم يُضبط بعد على الخادم.",INVALID_ADMIN_CODE:"رمز الإدارة غير صحيح.",FORBIDDEN:"هذا البريد غير مصرح له بالإدارة."};
+        show(map[e.message]||`تعذّر الدخول: ${e.message}`);
+      }finally{btn.disabled=false;btn.textContent="دخول لوحة التحكم"}
+    });
+  </script>
+</body>
+</html>
