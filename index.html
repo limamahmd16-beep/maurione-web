@@ -3,15 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#0c0a08" />
-    <meta name="color-scheme" content="dark" />
+    <meta id="theme-color" name="theme-color" content="#f7f4ef" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          theme = localStorage.getItem('maurione_theme_v1') || 'light';
+        } catch (e) {}
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.style.colorScheme = theme;
+        var themeColor = document.getElementById('theme-color');
+        if (themeColor) {
+          themeColor.setAttribute('content', theme === 'dark' ? '#0c0a08' : '#f7f4ef');
+        }
+      })();
+    </script>
     <title>MauriOne | معرض السيارات</title>
     <meta name="description" content="MauriOne — مجموعة مختارة ومفحوصة بعناية من السيارات المستعملة بحالة ممتازة." />
     <link rel="icon" type="image/png" href="/maurione-logo.png" />
     <style>
       * { -webkit-tap-highlight-color: transparent; }
       html, body, #root { min-height: 100%; }
-      body { margin: 0; background: #0c0a08; }
+      html { background: #f7f4ef; }
+      html[data-theme='dark'] { background: #0c0a08; }
+      body { margin: 0; background: inherit; }
     </style>
   </head>
   <body>
