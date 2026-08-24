@@ -18,7 +18,11 @@ const lightCss = `
 html,body{background:var(--bg);color:var(--text)}
 .splash{background:radial-gradient(circle at 50% 45%,rgba(157,117,73,.10),transparent 34%),linear-gradient(145deg,#fbf8f3,#f1ece5)}
 .header{background:rgba(250,247,242,.92);border-bottom-color:var(--line);box-shadow:0 1px 0 rgba(61,45,29,.03)}
-.logo{image-rendering:auto!important;filter:none!important;opacity:1!important;transform:none!important}
+.logo{image-rendering:auto!important;filter:none!important;opacity:1!important;transform:none!important;object-fit:contain!important}
+.header .logo{width:154px!important;height:58px!important;max-width:none!important;max-height:none!important}
+.footer .logo{width:176px!important;height:94px!important;max-width:none!important;max-height:none!important}
+.login img.logo{width:230px!important;height:130px!important;max-width:100%!important;max-height:none!important}
+.splashBox img.logo{width:min(256px,78vw)!important;height:145px!important;max-width:none!important;max-height:none!important;margin-inline:auto}
 .nav{color:var(--muted)}.nav a:hover{color:var(--text)}
 .hero{background:var(--bg)}
 .heroMedia{filter:saturate(.62) contrast(.96) brightness(1.05) sepia(.08)}
@@ -75,7 +79,7 @@ html[data-theme='dark'] .login{background:var(--surface);box-shadow:0 30px 80px 
 html[data-theme='dark'] .form input{background:#0f0c0a;color:var(--text);border-color:var(--line)}
 html[data-theme='dark'] .nav.open{background:var(--bg2)}
 html[data-theme='dark'] .themeToggle{background:rgba(21,17,14,.92);color:#e8ddd1;border-color:rgba(198,163,118,.20);box-shadow:0 10px 30px rgba(0,0,0,.3)}
-@media(max-width:680px){.themeToggle{width:42px;height:42px;left:14px;bottom:14px}}
+@media(max-width:680px){.themeToggle{width:42px;height:42px;left:14px;bottom:14px}.header .logo{width:136px!important;height:52px!important}.footer .logo{width:160px!important;height:90px!important}.login img.logo{width:210px!important;height:120px!important}.splashBox img.logo{width:min(240px,80vw)!important;height:136px!important}}
 `;
 
 export default function MauriOneLight(){
