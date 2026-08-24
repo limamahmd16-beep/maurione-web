@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import MauriOneApp from "./MauriOne.jsx";
 import AdminPanel from "./AdminPanel.jsx";
+import "./admin-full.css";
 
 function MauriOneOfficialTheme() {
   useEffect(() => {
