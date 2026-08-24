@@ -1,16 +1,30 @@
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { FieldValue, getFirestore } from "firebase-admin/firestore";
+import crypto from "node:crypto";
 
 function getAdminApp() {
   if (getApps().length) return getApps()[0];
-  const projectId = process.env.FIREBASE_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
-  if (!projectId || !clientEmail || !privateKey) {
-    throw new Error("ADMIN_FIREBASE_NOT_CONFIGURED");
+
+  let serviceAccount = null;
+  if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+    try {
+      serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+      if (serviceAccount.private_key) serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+    } catch {
+      throw new Error("ADMIN_FIREBASE_NOT_CONFIGURED");
+    }
   }
-  return initializeApp({ credential: cert({ projectId, clientEmail, privateKey }) });
+
+  if (!serviceAccount) {
+    const projectId = process.env.FIREBASE_PROJECT_ID;
+    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+    if (!projectId || !clientEmail || !privateKey) throw new Error("ADMIN_FIREBASE_NOT_CONFIGURED");
+    serviceAccount = { projectId, clientEmail, privateKey };
+  }
+
+  return initializeApp({ credential: cert(serviceAccount) });
 }
 
 function allowedAdmins() {
@@ -20,6 +34,12 @@ function allowedAdmins() {
       .map((x) => x.trim().toLowerCase())
       .filter(Boolean)
   );
+}
+
+function safeEqual(a, b) {
+  const x = Buffer.from(String(a || ""));
+  const y = Buffer.from(String(b || ""));
+  return x.length === y.length && crypto.timingSafeEqual(x, y);
 }
 
 async function requireAdmin(req) {
@@ -60,10 +80,33 @@ async function readBody(req) {
 
 export default async function handler(req, res) {
   try {
+    const action = String(req.query.action || "summary");
+
+    if (req.method === "POST" && action === "bootstrapLogin") {
+      const body = await readBody(req);
+      const configuredCode = process.env.ADMIN_BOOTSTRAP_CODE || "";
+      if (!configuredCode) return json(res, 503, { ok: false, error: "ADMIN_BOOTSTRAP_NOT_CONFIGURED" });
+      if (!safeEqual(body.code, configuredCode)) return json(res, 403, { ok: false, error: "INVALID_ADMIN_CODE" });
+
+      const requestedEmail = String(body.email || "").trim().toLowerCase();
+      if (!allowedAdmins().has(requestedEmail)) return json(res, 403, { ok: false, error: "FORBIDDEN" });
+
+      const app = getAdminApp();
+      const auth = getAuth(app);
+      let user;
+      try { user = await auth.getUserByEmail(requestedEmail); }
+      catch (err) {
+        if (err?.code !== "auth/user-not-found") throw err;
+        user = await auth.createUser({ email: requestedEmail, emailVerified: true, displayName: "MauriOne Admin" });
+      }
+      if (!user.emailVerified) user = await auth.updateUser(user.uid, { emailVerified: true });
+      const token = await auth.createCustomToken(user.uid, { mauriOneAdmin: true });
+      return json(res, 200, { ok: true, token });
+    }
+
     const { app } = await requireAdmin(req);
     const db = getFirestore(app);
     const auth = getAuth(app);
-    const action = String(req.query.action || "summary");
 
     if (req.method === "GET" && action === "summary") {
       const [adsSnap, reportsSnap] = await Promise.all([
@@ -169,8 +212,7 @@ export default async function handler(req, res) {
       if (!uid) return json(res, 400, { ok: false, error: "MISSING_UID" });
       await auth.deleteUser(uid);
       const batch = db.batch();
-      const userRef = db.collection("users").doc(uid);
-      batch.delete(userRef);
+      batch.delete(db.collection("users").doc(uid));
       const adsSnap = await db.collection("ads").where("ownerId", "==", uid).get();
       adsSnap.docs.forEach((d) => batch.delete(d.ref));
       await batch.commit();
