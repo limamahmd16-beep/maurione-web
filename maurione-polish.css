@@ -1,9 +1,11 @@
-/* MauriOne visual polish — presentation only */
+/* MauriOne visual polish v2 — presentation only, no business logic changes */
 :root {
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --mo-green: 25, 201, 138;
+  --mo-line: 148, 163, 184;
 }
 
 * { box-sizing: border-box; }
@@ -13,20 +15,21 @@ html, body, #root {
   margin: 0;
 }
 
+html { scroll-behavior: smooth; }
+
 body {
   overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-button, a, input, textarea, select {
-  font: inherit;
-}
+button, a, input, textarea, select { font: inherit; }
+button, a, [role="button"] { touch-action: manipulation; }
+button { cursor: pointer; }
 
-button, a, [role="button"] {
-  touch-action: manipulation;
-}
-
-button {
-  cursor: pointer;
+button:active,
+a:active,
+[role="button"]:active {
+  transform: scale(.985);
 }
 
 button:focus-visible,
@@ -34,175 +37,264 @@ a:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
-  outline: 2px solid rgba(25, 201, 138, .85);
-  outline-offset: 2px;
+  outline: 2px solid rgba(var(--mo-green), .88);
+  outline-offset: 3px;
 }
 
 input::placeholder,
-textarea::placeholder {
-  opacity: .72;
-}
+textarea::placeholder { opacity: .64; }
 
 img {
   display: block;
-  background: rgba(148,163,184,.08);
+  max-width: 100%;
+  background: rgba(var(--mo-line), .08);
 }
 
-button img,
-.mo-search-grid img,
-.mo-fav-grid img,
-.mo-ad-rows img {
-  transition: transform .28s ease, filter .28s ease;
-}
-
-button:hover img,
-.mo-search-grid button:hover img,
-.mo-fav-grid button:hover img {
-  transform: scale(1.025);
-}
-
-/* App frame */
+/* Main app shell */
 .mo-frame {
   isolation: isolate;
   position: relative;
-  box-shadow: 0 0 0 1px rgba(148,163,184,.08), 0 28px 80px rgba(0,0,0,.16);
+  width: 100%;
+  box-shadow:
+    0 0 0 1px rgba(var(--mo-line), .08),
+    0 30px 90px rgba(0, 0, 0, .18);
 }
 
-/* Premium surface treatment without changing component layout */
 .mo-frame > div,
 .mo-frame section {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 
+/* More consistent visual rhythm across cards and panels */
 .mo-frame .rounded-2xl,
 .mo-frame .rounded-xl {
-  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease, background-color .18s ease;
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    transform .2s ease,
+    background-color .2s ease;
+}
+
+.mo-frame button.rounded-2xl,
+.mo-frame button.rounded-xl {
+  will-change: transform;
 }
 
 .mo-frame button.rounded-2xl:hover,
 .mo-frame button.rounded-xl:hover {
-  box-shadow: 0 10px 28px rgba(0,0,0,.10);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .11);
 }
 
-/* Consistent icon language */
+/* Icon system: cleaner, consistent stroke behavior */
 .mo-frame svg {
   stroke-linecap: round;
   stroke-linejoin: round;
   flex: 0 0 auto;
 }
 
-.mo-frame button svg {
-  transition: transform .16s ease, opacity .16s ease;
+.mo-frame button svg,
+.mo-frame a svg {
+  transition: transform .17s ease, opacity .17s ease;
 }
 
 .mo-frame button:hover > svg,
-.mo-frame button:hover span > svg {
+.mo-frame button:hover span > svg,
+.mo-frame a:hover > svg {
   transform: translateY(-1px);
 }
 
-/* Search and form fields */
+/* Form controls: larger, calmer, easier to use on phones */
 .mo-frame input,
 .mo-frame textarea,
 .mo-frame select {
-  min-height: 42px;
-  border-radius: 12px;
-  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+  min-height: 48px;
+  border-radius: 15px;
+  transition:
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background-color .18s ease,
+    transform .18s ease;
 }
+
+.mo-frame textarea { min-height: 112px; }
 
 .mo-frame input:focus,
 .mo-frame textarea:focus,
 .mo-frame select:focus {
-  border-color: rgba(25,201,138,.72) !important;
-  box-shadow: 0 0 0 3px rgba(25,201,138,.10);
+  border-color: rgba(var(--mo-green), .76) !important;
+  box-shadow: 0 0 0 4px rgba(var(--mo-green), .11);
 }
 
-/* Category area */
+/* Categories: stronger app-like tiles */
+.mo-cat-grid {
+  gap: 12px !important;
+}
+
 .mo-cat-grid button {
   min-width: 0;
+  border-radius: 18px;
 }
 
 .mo-cat-grid button > div {
   transform: translateZ(0);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  box-shadow: inset 0 0 0 1px rgba(var(--mo-line), .07);
 }
 
 .mo-cat-grid button:hover > div {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(25,201,138,.14) !important;
+  transform: translateY(-3px);
+  box-shadow:
+    inset 0 0 0 1px rgba(var(--mo-green), .14),
+    0 12px 28px rgba(var(--mo-green), .13) !important;
 }
 
-/* Listing cards */
+/* Listing cards: more separation, better hierarchy */
+.mo-search-grid,
+.mo-fav-grid { gap: 14px !important; }
+
 .mo-search-grid > button,
 .mo-fav-grid > button {
-  box-shadow: 0 8px 24px rgba(0,0,0,.06);
+  overflow: hidden;
+  border-radius: 20px !important;
+  box-shadow:
+    0 0 0 1px rgba(var(--mo-line), .06),
+    0 8px 24px rgba(0, 0, 0, .07);
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
 }
 
 .mo-search-grid > button:hover,
 .mo-fav-grid > button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 32px rgba(0,0,0,.10);
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 0 1px rgba(var(--mo-green), .12),
+    0 16px 38px rgba(0, 0, 0, .12);
 }
 
+.mo-search-grid img,
+.mo-fav-grid img,
+.mo-ad-rows img,
+button img {
+  transition: transform .3s cubic-bezier(.2,.7,.2,1), filter .3s ease;
+}
+
+.mo-search-grid > button:hover img,
+.mo-fav-grid > button:hover img {
+  transform: scale(1.035);
+}
+
+/* Compact list rows */
+.mo-ad-rows { gap: 8px !important; }
+
 .mo-ad-rows > button {
-  border-radius: 16px;
-  padding-inline: 10px;
-  margin-bottom: 6px;
+  border-radius: 18px;
+  padding: 10px;
+  margin-bottom: 2px;
+  transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
 }
 
 .mo-ad-rows > button:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .08);
 }
 
-/* Bottom navigation: app-like floating glass bar */
+/* Bottom navigation: more native-app-like, clearer center action */
 .mo-nav {
-  backdrop-filter: blur(18px) saturate(135%);
-  -webkit-backdrop-filter: blur(18px) saturate(135%);
-  box-shadow: 0 -12px 30px rgba(0,0,0,.10);
+  backdrop-filter: blur(22px) saturate(145%);
+  -webkit-backdrop-filter: blur(22px) saturate(145%);
+  box-shadow:
+    0 -1px 0 rgba(var(--mo-line), .08),
+    0 -14px 34px rgba(0, 0, 0, .11);
+  padding-bottom: max(env(safe-area-inset-bottom), 8px);
 }
 
 .mo-nav > button:not(:nth-child(3)) {
-  min-width: 56px;
-  min-height: 48px;
-  border-radius: 14px;
+  min-width: 58px;
+  min-height: 50px;
+  border-radius: 16px;
+  transition: transform .17s ease, background-color .17s ease, opacity .17s ease;
+}
+
+.mo-nav > button:not(:nth-child(3)):active {
+  transform: scale(.96);
 }
 
 .mo-nav > button:nth-child(3) {
   border: 1px solid rgba(255,255,255,.28);
+  box-shadow:
+    0 8px 22px rgba(var(--mo-green), .24),
+    inset 0 1px 0 rgba(255,255,255,.22);
 }
 
-/* Improve touch targets in compact icon buttons */
+.mo-nav > button:nth-child(3):hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Better touch targets for icon-only controls */
 .mo-frame button.w-9.h-9,
-.mo-frame button.w-8.h-8 {
-  min-width: 40px;
-  min-height: 40px;
+.mo-frame button.w-8.h-8,
+.mo-frame button[class*="w-9"][class*="h-9"],
+.mo-frame button[class*="w-8"][class*="h-8"] {
+  min-width: 42px;
+  min-height: 42px;
 }
 
-/* Better density on wide displays while preserving the existing breakpoints */
-@media (min-width: 700px) {
+/* Toasts and floating surfaces should feel intentional */
+.mo-frame [class*="z-[60]"] {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Mobile-first: edge-to-edge, safe and app-like */
+@media (max-width: 699px) {
   .mo-frame {
-    border-radius: 22px;
+    min-height: 100svh !important;
+    box-shadow: none;
+  }
+
+  .mo-cat-grid { gap: 10px !important; }
+  .mo-search-grid,
+  .mo-fav-grid { gap: 11px !important; }
+
+  .mo-search-grid > button,
+  .mo-fav-grid > button { border-radius: 18px !important; }
+}
+
+/* Tablet and desktop: keep the same app identity, just breathe better */
+@media (min-width: 700px) {
+  body { padding-inline: 14px; }
+
+  .mo-frame {
+    max-width: 980px;
+    margin: 18px auto;
+    border-radius: 26px;
     overflow: clip;
-    margin-block: 18px;
     min-height: calc(100vh - 36px) !important;
   }
 
   .mo-search-grid,
   .mo-fav-grid,
-  .mo-ad-rows {
-    gap: 14px !important;
-  }
+  .mo-ad-rows { gap: 16px !important; }
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 1100px) {
+  body { padding-inline: 22px; }
+
   .mo-frame {
-    border-radius: 26px;
+    max-width: 1080px;
+    border-radius: 30px;
     margin-block: 24px;
     min-height: calc(100vh - 48px) !important;
+    box-shadow:
+      0 0 0 1px rgba(var(--mo-line), .08),
+      0 34px 110px rgba(0,0,0,.20);
   }
 }
 
-/* Keep motion refined and accessible */
+/* Accessibility: respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: .001ms !important;
     animation-iteration-count: 1 !important;
