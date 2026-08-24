@@ -4,7 +4,7 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signInWithRedirect,
+  signInWithPopup,
   signOut,
 } from "firebase/auth";
 import {
@@ -34,7 +34,10 @@ function Login() {
   const emailLogin = async (e) => {
     e.preventDefault(); setBusy(true); setError("");
     try { await signInWithEmailAndPassword(auth, email.trim(), password); }
-    catch (err) { setError("هذا الحساب قد يكون مسجلاً عبر Google فقط. جرّب زر Google أدناه."); }
+    catch (err) {
+      console.error(err);
+      setError("تعذّر تسجيل الدخول بالبريد. إذا كان حسابك مرتبطًا بـ Google استخدم زر Google أدناه.");
+    }
     finally { setBusy(false); }
   };
 
@@ -43,10 +46,12 @@ function Login() {
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: "select_account" });
-      await signInWithRedirect(auth, provider);
+      await signInWithPopup(auth, provider);
     } catch (err) {
       console.error(err);
-      setError("تعذّر بدء تسجيل الدخول عبر Google.");
+      const code = err?.code ? ` (${err.code})` : "";
+      setError(`تعذّر تسجيل الدخول عبر Google${code}`);
+    } finally {
       setBusy(false);
     }
   };
