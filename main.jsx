@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import MauriOneApp from "./MauriOne.jsx";
+import AdminDashboard from "./AdminDashboard.jsx";
 
 function MauriOneOfficialTheme() {
   useEffect(() => {
@@ -26,8 +27,10 @@ function MauriOneOfficialTheme() {
   return <MauriOneApp />;
 }
 
+const isAdminRoute = typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <MauriOneOfficialTheme />
+    {isAdminRoute ? <AdminDashboard /> : <MauriOneOfficialTheme />}
   </React.StrictMode>
 );
