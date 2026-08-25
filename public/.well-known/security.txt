@@ -1,0 +1,4 @@
+Contact: mailto:limamahmd16@gmail.com
+Preferred-Languages: ar, fr, en
+Canonical: https://maurione-web.vercel.app/.well-known/security.txt
+Expires: 2027-08-21T00:00:00Z
